@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Conta - Empregador</title>
+    <link rel="shortcut icon" href="../Downloads/logo - nova chance .png" type="image/x-icon">
+    <link rel="stylesheet" href="estilo da pagina .css">
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+          <img src="../Downloads/logo - nova chance .png" alt="logo">
+        </div>
+        <form class="login-form">
+          <label for="responsavel">Nome do Responsável:</label>
+          <input type="text" id="responsavel" name="responsavel" placeholder="Digite seu nome" required>
+        
+          <label for="email">Email da empresa:</label>
+          <input type="email" id="email" name="email" placeholder="Digite seu Gmail" required>
+
+          <label for="cnpj">CNPJ:</label>
+          <input type="text" id="cnpj" name="cnpj" placeholder="Digite seu CNPJ" required>
+
+          <label for="password">SENHA:</label>
+          <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+          
+          <label for="confirm-password">Confirmar:</label>
+          <input type="password" id="confirm-password" name="confirm-password" placeholder="Digite sua senha novamente" required>
+
+          <label for="tipo">Tipo de Empresa:</label>
+          <select id="tipo" name="tipo" required>
+              <option value="mei">Microempreendedor Individual (MEI)</option>
+              <option value="ei">Empresário Individual (EI)</option>
+              <option value="ltda">Sociedade Limitada (LTDA)</option>
+              <option value="eireli">Empresa Individual de Responsabilidade Limitada (EIRELI)</option>
+              <option value="sa">Sociedade Anônima (S.A.)</option>
+          </select>
+
+          <button type="submit" class="login-btn">Criar Conta</button>
+          <a href="criar-conta-como-empresa.html" class="create-account">Criar conta como empresa</a>
+        </form>
+    </div>
+</body>
+</html>
