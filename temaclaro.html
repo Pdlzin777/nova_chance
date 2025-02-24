@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Configurações - Nova Chance</title>
+  <link rel="shortcut icon" href="../Downloads/logo - nova chance .png" type="image/x-icon">
+  <link rel="stylesheet" href="temaclaroestilo.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <img src="../Downloads/logo - nova chance .png" alt="Logo Nova Chance">
+        <h1>Configurações</h1>
+      </div>
+    </header>
+    <nav class="menu">
+      <a href="dashboard.html">Início</a>
+      <a href="perfil.html">Perfil</a>
+      <a href="configuracoes.html" class="active">Configurações</a>
+      <a href="suporte.html">Suporte</a>
+    </nav>
+    <main>
+      <section class="config-section">
+        <h2>Configurações da Conta</h2>
+        <form class="config-form">
+          <label for="nome">Nome:</label>
+          <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required>
+          
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" placeholder="Digite seu email" required>
+          
+          <label for="senha">Nova Senha:</label>
+          <input type="password" id="senha" name="senha" placeholder="Digite sua nova senha">
+          
+          <label for="confirm-senha">Confirmar Senha:</label>
+          <input type="password" id="confirm-senha" name="confirm-senha" placeholder="Confirme sua nova senha">
+          
+          <button type="submit" class="save-btn">Salvar Alterações</button>
+        </form>
+      </section>
+
+      <section class="config-section">
+        <h2>Aparência</h2>
+        <form class="config-form">
+          <label for="tema">Tema do Site:</label>
+          <select id="tema" name="tema">
+            <option value="escuro" selected>Escuro</option>
+            <option value="claro">Claro</option>
+          </select>
+          <button type="submit" class="save-btn">Salvar Tema</button>
+        </form>
+      </section>
+
+      <section class="config-section">
+        <h2>Notificações</h2>
+        <form class="config-form">
+          <label for="email-notif">Notificações por Email:</label>
+          <select id="email-notif" name="email-notif">
+            <option value="ativado" selected>Ativado</option>
+            <option value="desativado">Desativado</option>
+          </select>
+          <label for="push-notif">Notificações Push:</label>
+          <select id="push-notif" name="push-notif">
+            <option value="ativado" selected>Ativado</option>
+            <option value="desativado">Desativado</option>
+          </select>
+          <button type="submit" class="save-btn">Salvar Notificações</button>
+        </form>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2025 Nova Chance. Todos os direitos reservados.</p>
+    </footer>
+  </div>
+</body>
+</html>
