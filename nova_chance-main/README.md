@@ -1,2 +1,4 @@
-# Projeto_integrador-desemprego
-Aplicação para web para diminuir o desemprego
+# Projeto Nova Chance
+O projeto "Nova Chance" é uma plataforma web inovadora, projetada para ajudar a reduzir a taxa de desemprego no estado da Paraíba. O objetivo principal da aplicação é conectar profissionais qualificados, que buscam por novas oportunidades de emprego, com empresas que estão à procura de talentos, seja para vagas presenciais ou home office. A plataforma contará com um sistema de cadastro tanto para candidatos quanto para empregadores, facilitando o processo de busca, aplicação e contratação. Os usuários poderão se cadastrar, criar perfis detalhados, incluir currículos, e buscar vagas de acordo com suas preferências e qualificações. As empresas, por sua vez, poderão publicar suas vagas, filtrar candidatos de acordo com requisitos específicos, e gerenciar o processo seletivo de forma eficiente. O sistema também incluirá funcionalidades como alertas de novas oportunidades e a possibilidade de feedbacks entre candidatos e empregadores, promovendo uma maior interação e transparência no processo de recrutamento. Com isso, o projeto visa não apenas criar mais oportunidades de emprego, mas também facilitar o processo de recrutamento, tornando-o mais dinâmico e acessível para todos os envolvidos.
+
+
