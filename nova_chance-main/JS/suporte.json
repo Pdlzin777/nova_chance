@@ -1,0 +1,89 @@
+{
+  "pagina": {
+    "titulo": "Suporte - Nova Chance",
+    "favicon": "../Downloads/logo - nova chance .png"
+  },
+  "header": {
+    "logo": "../Downloads/logo - nova chance .png",
+    "tituloPagina": "Suporte",
+    "menu": [
+      {
+        "texto": "Início",
+        "href": "dashboard.html"
+      },
+      {
+        "texto": "Perfil",
+        "href": "perfil.html"
+      },
+      {
+        "texto": "Configurações",
+        "href": "configuracoes.html"
+      },
+      {
+        "texto": "Suporte",
+        "href": "suporte.html",
+        "classe": "active"
+      }
+    ]
+  },
+  "secaoInfo": {
+    "titulo": "Como podemos ajudar?",
+    "paragrafo": "Se você tiver dúvidas, sugestões ou problemas técnicos, por favor, entre em contato conosco. Nossa equipe de suporte está pronta para ajudar."
+  },
+  "secaoFormulario": {
+    "titulo": "Envie sua Mensagem",
+    "formulario": {
+      "campos": [
+        {
+          "tipo": "text",
+          "id": "nome",
+          "nome": "nome",
+          "placeholder": "Digite seu nome",
+          "label": "Nome:",
+          "required": true
+        },
+        {
+          "tipo": "email",
+          "id": "email",
+          "nome": "email",
+          "placeholder": "Digite seu email",
+          "label": "Email:",
+          "required": true
+        },
+        {
+          "tipo": "textarea",
+          "id": "mensagem",
+          "nome": "mensagem",
+          "placeholder": "Descreva seu problema ou dúvida",
+          "label": "Mensagem:",
+          "rows": 6,
+          "required": true
+        }
+      ],
+      "botao": {
+        "texto": "Enviar Mensagem",
+        "classe": "send-btn"
+      }
+    }
+  },
+  "secaoFaq": {
+    "titulo": "Perguntas Frequentes",
+    "perguntas": [
+      {
+        "pergunta": "Como faço para alterar minha senha?",
+        "resposta": "Acesse a página de configurações, e clique em \"Atualizar Perfil\"."
+      },
+      {
+        "pergunta": "Como mudar o tema do site?",
+        "resposta": "Na seção \"Aparência\" da página de configurações, selecione o tema desejado."
+      },
+      {
+        "pergunta": "Como entro em contato com o suporte?",
+        "resposta": "Preencha o formulário nesta página e nossa equipe responderá o mais breve possível."
+      }
+    ]
+  },
+  "footer": {
+    "texto": "&copy; 2025 Nova Chance. Todos os direitos reservados."
+  }
+}
