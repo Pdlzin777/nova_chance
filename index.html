@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Postagem de Trabalho</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+    }
+
+    header {
+      background-color: #ddd;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      width: 50px;
+      height: 30px;
+      background-color: #fff;
+      border-radius: 4px;
+    }
+
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #000;
+      font-weight: bold;
+    }
+
+    .main {
+      padding: 30px;
+      background-color: #000;
+      min-height: calc(100vh - 120px);
+    }
+
+    .jobs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      justify-items: center;
+    }
+
+    .job-card {
+      background-color: #e0e0e0;
+      color: #000;
+      padding: 20px;
+      border-radius: 20px;
+      width: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .job-card h3 {
+      margin: 0;
+    }
+
+    .job-card p {
+      margin: 5px 0 15px;
+    }
+
+    .job-card button {
+      background-color: #32a852;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    footer {
+      background-color: #ccc;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .form-section {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .form-section input {
+      padding: 10px;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .form-section button {
+      padding: 10px 15px;
+      margin-left: 5px;
+      border: none;
+      background-color: #32a852;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo"></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="Downloads/nova_chance-main/suporte.html">Empresas</a>
+      <a href="#">Trabalho</a>
+      <a href="#">Planos</a>
+    </nav>
+  </header>
+
+  <div class="main">
+    <div class="jobs-grid" id="job-list"></div>
+
+    <div class="form-section">
+      <input type="text" id="cargo" placeholder="Cargo">
+      <input type="number" id="valor" placeholder="Valor em Reais">
+      <button onclick="adicionarTrabalho()">Adicionar</button>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 Oportunidades para Todos
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
