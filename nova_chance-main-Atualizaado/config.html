@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Configurações - Nova Chance</title>
+  <link rel="shortcut icon" href="../Downloads/logo - nova chance .png" type="image/x-icon">
+  <link rel="stylesheet" href="estconfg.css">
+</head>
+
+<body>
+  
+  <div class="container">
+    <header>
+      <div class="logo">
+        <img src="../Downloads/logo - nova chance .png" alt="Logo Nova Chance">
+        <h1>Configurações</h1>
+      </div>
+    </header>
+    <nav class="menu">
+      <a href="index.html">Início</a>
+      <a href="perfil.html">Perfil</a>
+      <a href="config.html" class="active">Configurações</a>
+      <a href="paginaparaserprimiu.html">Suporte</a>
+    </nav> 
+    <main>
+      <section class="config-section">
+        <h2>Configurações da Conta</h2>
+        <form class="config-form">
+          <label for="nome">Nome:</label>
+          <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required>
+          
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" placeholder="Digite seu email" required>
+          
+          <label for="senha">Nova Senha:</label>
+          <input type="password" id="senha" name="senha" placeholder="Digite sua nova senha">
+          
+          <label for="confirm-senha">Confirmar Senha:</label>
+          <input type="password" id="confirm-senha" name="confirm-senha" placeholder="Confirme sua nova senha">
+          
+          <button type="submit" class="save-btn">Salvar Alterações</button>
+        </form>
+      </section>
+
+      <section class="config-section">
+        <h2>Aparência</h2>
+        <form class="config-form">
+          <label for="tema">Tema do Site:</label>
+          <select id="tema" name="tema">
+            <option value="escuro" selected>Escuro</option>
+            <option value="claro">claro</option>
+          </select>
+          <button type="submit" class="save-btn">Salvar Tema</button>
+        </form>
+      </section>
+
+      <section class="config-section">
+        <h2>Notificações</h2>
+        <form class="config-form">
+          <label for="email-notif">Notificações por Email:</label>
+          <select id="email-notif" name="email-notif">
+            <option value="ativado" selected>Ativado</option>
+            <option value="desativado">Desativado</option>
+          </select>
+          <label for="push-notif">Notificações Push:</label>
+          <select id="push-notif" name="push-notif">
+            <option value="ativado" selected>Ativado</option>
+            <option value="desativado">Desativado</option>
+          </select>
+          <button type="submit" class="save-btn">Salvar Notificações</button>
+        </form>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2025 Nova Chance. Todos os direitos reservados.</p>
+    </footer>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const contaForm = document.querySelector(".config-section:nth-of-type(1) .config-form");
+      const temaForm = document.querySelector(".config-section:nth-of-type(2) .config-form");
+      const notifForm = document.querySelector(".config-section:nth-of-type(3) .config-form");
+  
+      const temaLink = document.querySelector('link[rel="stylesheet"]');
+  
+      // Aplica o tema ao carregar a página
+      function aplicarTema(tema) {
+        if (tema === "claro") {
+          temaLink.href = "temaclaroestilo.css";
+        } else {
+          temaLink.href = "estconfg.css"; // CSS padrão para tema escuro
+        }
+        document.getElementById("tema").value = tema;
+      }
+  
+      // Salvar configurações da conta
+      contaForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const nome = document.getElementById("nome").value;
+        const email = document.getElementById("email").value;
+        const senha = document.getElementById("senha").value;
+        const confirmSenha = document.getElementById("confirm-senha").value;
+  
+        if (senha && senha !== confirmSenha) {
+          alert("As senhas não coincidem!");
+          return;
+        }
+  
+        localStorage.setItem("nome", nome);
+        localStorage.setItem("email", email);
+        if (senha) localStorage.setItem("senha", senha); // Simulação
+  
+        alert("Dados da conta salvos com sucesso!");
+      });
+  
+      // Trocar e salvar tema
+      temaForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const tema = document.getElementById("tema").value;
+        localStorage.setItem("tema", tema);
+        aplicarTema(tema);
+        alert("Tema salvo com sucesso!");
+      });
+  
+      // Salvar notificações
+      notifForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const emailNotif = document.getElementById("email-notif").value;
+        const pushNotif = document.getElementById("push-notif").value;
+  
+        localStorage.setItem("emailNotif", emailNotif);
+        localStorage.setItem("pushNotif", pushNotif);
+  
+        alert("Notificações salvas!");
+      });
+  
+      // Carregar dados salvos
+      function carregarConfiguracoes() {
+        if (localStorage.getItem("nome")) {
+          document.getElementById("nome").value = localStorage.getItem("nome");
+        }
+        if (localStorage.getItem("email")) {
+          document.getElementById("email").value = localStorage.getItem("email");
+        }
+        if (localStorage.getItem("emailNotif")) {
+          document.getElementById("email-notif").value = localStorage.getItem("emailNotif");
+        }
+        if (localStorage.getItem("pushNotif")) {
+          document.getElementById("push-notif").value = localStorage.getItem("pushNotif");
+        }
+  
+        const temaSalvo = localStorage.getItem("tema") || "escuro";
+        aplicarTema(temaSalvo);
+      }
+  
+      carregarConfiguracoes();
+    });
+  </script>
+  
+</body>
+</html>
