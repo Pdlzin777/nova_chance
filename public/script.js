@@ -1,10 +1,18 @@
-const trabalhos = [
-    { cargo: "Cozinheiro", valor: 1000 },
-    { cargo: "Cozinheiro", valor: 1000 },
-    { cargo: "Cozinheiro", valor: 1000 },
-    { cargo: "Cozinheiro", valor: 1000 },
-    { cargo: "Cozinheiro", valor: 1000 }
-  ];
+// const trabalhos = [
+//     { cargo: "Cozinheiro", valor: 1000 },
+//     { cargo: "Cozinheiro", valor: 1000 },
+//     { cargo: "Cozinheiro", valor: 1000 },
+//     { cargo: "Cozinheiro", valor: 1000 },
+//     { cargo: "Cozinheiro", valor: 1000 }
+//   ];
+
+let trabalhos = [];
+
+async function load() {
+  const response = await fetch('/trabalhos');
+  trabalhos = await response.json();
+  renderizarTrabalhos();
+}
   
   function renderizarTrabalhos() {
     const lista = document.getElementById("job-list");
@@ -47,5 +55,5 @@ const trabalhos = [
     }
   }
   
-  document.addEventListener("DOMContentLoaded", renderizarTrabalhos);
+  load();
   

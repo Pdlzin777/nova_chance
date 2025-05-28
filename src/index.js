@@ -2,6 +2,8 @@ import express from 'express';
 import { trabalhos } from './data/index.js';
  
 const app = express();
+
+app.use(express.static('public'));
  
 app.get('/', (req, res) => {
   res.send('Hello World!');
