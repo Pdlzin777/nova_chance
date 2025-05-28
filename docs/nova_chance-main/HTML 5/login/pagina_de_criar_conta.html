@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crie Sua Conta</title>
+  <link rel="stylesheet" href="estilo_paginadeloginempregado.css">
+  <link rel="shortcut icon" href="Logo(projeto desemprego).png" type="image/x-icon">
+  <link rel="stylesheet" href="scriptbemvindo.js">
+</head>
+<body>
+  <div class="form-container">
+    <!-- Seção esquerda -->
+    <div class="left-section">
+      <h1>Crie<br>Sua Conta</h1>
+      <p>Complete o Formulário Para Fazer o seu cadastro no site Nova Chance</p>
+      <a href="criar_conta_como_empresa.html" class="create-company-account">Criar conta como empresa</a>
+    </div>
+
+    <!-- Seção direita -->
+    <div class="right-section">
+      <form action="#" method="post">
+        <div class="form-group">
+          <input type="text" placeholder="Primeiro Nome *" required>
+          <input type="text" placeholder="Segundo Nome">
+        </div>
+        <div class="form-group">
+          <input type="text" placeholder="Telefone *" required>
+          <input type="email" placeholder="Gmail *" required>
+        </div>
+        <div class="form-group">
+          <input type="date" placeholder="Data de Aniversário *" required>
+          <select required>
+            <option value="" disabled selected>Ensino *</option>
+            <option value="fundamental">Ensino Fundamental</option>
+            <option value="medio">Ensino Médio</option>
+            <option value="superior">Ensino Superior</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <input type="url" placeholder="Link de Rede Social">
+          <input type="password" placeholder="Senha *" required>
+        </div>
+        <div class="form-group">
+          <input type="password" placeholder="Confirmar Senha *" required>
+        </div>
+        <button type="submit" class="submit-button">Enviar</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

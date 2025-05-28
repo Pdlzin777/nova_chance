@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Perfil - Nova Chance</title>
+  <link rel="shortcut icon" href="flaicon-png-transparente 1 1 (3).png" type="image/x-icon">
+  <link rel="stylesheet" href="estiloperfil.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <img src="flaicon-png-transparente 1 1 (2).png" alt="Logo Nova Chance">
+        <h1>Meu Perfil</h1>
+      </div>
+      <nav class="menu">
+        <a href="index.html">Início</a>
+        <a href="perfil.html" class="active">Perfil</a>
+        <a href="config.html">Configurações</a>
+        <a href="paginaparaserprimiu.html">Suporte</a>
+      </nav>
+    </header>
+    <main>
+      <section class="profile-card">
+        <div class="avatar">
+          <img src="../Downloads/avatar-placeholder.png" alt="Avatar">
+        </div>
+        <div class="user-info">
+          <h2>Nome do Usuário</h2>
+          <p>Email: usuario@exemplo.com</p>
+          <p>Empresa: Exemplo Ltda.</p>
+        </div>
+      </section>
+
+      <section class="profile-details">
+        <h2>Detalhes do Perfil</h2>
+        <form class="profile-form">
+          <label for="nome">Nome:</label>
+          <input type="text" id="nome" name="nome" placeholder="Digite seu nome" value="Nome do Usuário" required>
+          
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" placeholder="Digite seu email" value="usuario@exemplo.com" required>
+          
+          <label for="empresa">Empresa:</label>
+          <input type="text" id="empresa" name="empresa" placeholder="Digite o nome da empresa" value="Exemplo Ltda.">
+          
+          <label for="telefone">Telefone:</label>
+          <input type="tel" id="telefone" name="telefone" placeholder="Digite seu telefone" value="(11) 1234-5678">
+          
+          <button type="submit" class="update-btn">Atualizar Perfil</button>
+        </form>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2025 Nova Chance. Todos os direitos reservados.</p>
+    </footer>
+  </div>
+</body>
+</html>

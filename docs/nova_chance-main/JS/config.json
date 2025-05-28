@@ -1,0 +1,81 @@
+{
+    "pagina": {
+      "titulo": "Configurações - Nova Chance",
+      "favicon": "../Downloads/logo - nova chance .png"
+    },
+    "cabecalho": {
+      "logo": "../Downloads/logo - nova chance .png",
+      "titulo": "Configurações"
+    },
+    "menu": {
+      "itens": [
+        {"link": "dashboard.html", "texto": "Início"},
+        {"link": "perfil.html", "texto": "Perfil"},
+        {"link": "config.html", "texto": "Configurações", "active": true},
+        {"link": "suporte.html", "texto": "Suporte"}
+      ]
+    },
+    "configuracoes": [
+      {
+        "titulo": "Configurações da Conta",
+        "formulario": {
+          "campos": [
+            {"tipo": "text", "id": "nome", "nome": "nome", "rotulo": "Nome:", "placeholder": "Digite seu nome", "obrigatorio": true},
+            {"tipo": "email", "id": "email", "nome": "email", "rotulo": "Email:", "placeholder": "Digite seu email", "obrigatorio": true},
+            {"tipo": "password", "id": "senha", "nome": "senha", "rotulo": "Nova Senha:", "placeholder": "Digite sua nova senha"},
+            {"tipo": "password", "id": "confirm-senha", "nome": "confirm-senha", "rotulo": "Confirmar Senha:", "placeholder": "Confirme sua nova senha"}
+          ],
+          "botao": {"tipo": "submit", "texto": "Salvar Alterações", "classe": "save-btn"}
+        }
+      },
+      {
+        "titulo": "Aparência",
+        "formulario": {
+          "campos": [
+            {
+              "tipo": "select",
+              "id": "tema",
+              "nome": "tema",
+              "rotulo": "Tema do Site:",
+              "opcoes": [
+                {"valor": "escuro", "texto": "Escuro", "selecionado": true},
+                {"valor": "claro", "texto": "Claro"}
+              ]
+            }
+          ],
+          "botao": {"tipo": "submit", "texto": "Salvar Tema", "classe": "save-btn"}
+        }
+      },
+      {
+        "titulo": "Notificações",
+        "formulario": {
+          "campos": [
+            {
+              "tipo": "select",
+              "id": "email-notif",
+              "nome": "email-notif",
+              "rotulo": "Notificações por Email:",
+              "opcoes": [
+                {"valor": "ativado", "texto": "Ativado", "selecionado": true},
+                {"valor": "desativado", "texto": "Desativado"}
+              ]
+            },
+            {
+              "tipo": "select",
+              "id": "push-notif",
+              "nome": "push-notif",
+              "rotulo": "Notificações Push:",
+              "opcoes": [
+                {"valor": "ativado", "texto": "Ativado", "selecionado": true},
+                {"valor": "desativado", "texto": "Desativado"}
+              ]
+            }
+          ],
+          "botao": {"tipo": "submit", "texto": "Salvar Notificações", "classe": "save-btn"}
+        }
+      }
+    ],
+    "rodape": {
+      "texto": "&copy; 2025 Nova Chance. Todos os direitos reservados."
+    }
+  }
