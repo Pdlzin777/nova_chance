@@ -12,6 +12,10 @@ app.get('/', (req, res) => {
 app.get('/trabalhos', (req, res) => {
     return res.json(trabalhos)
   });
+
+  app.post('/logins', (req, res) => {
+    return res.json(logins)
+  });
  
 app.listen(3000, () => {
   console.log('App running on port 3000');
