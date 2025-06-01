@@ -1,11 +1,3 @@
-// const trabalhos = [
-//     { cargo: "Cozinheiro", valor: 1000 },
-//     { cargo: "Cozinheiro", valor: 1000 },
-//     { cargo: "Cozinheiro", valor: 1000 },
-//     { cargo: "Cozinheiro", valor: 1000 },
-//     { cargo: "Cozinheiro", valor: 1000 }
-//   ];
-
 let trabalhos = [];
 
 async function load() {
