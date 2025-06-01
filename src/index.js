@@ -1,14 +1,14 @@
 import express from 'express';
 import { trabalhos } from './data/index.js';
 import { logins } from './data/logins.js';
-import { logins_empresas } from './data/logins_empresa.js';
+import { logins_empresas } from './logins_empresa.js';
 
 const app = express();
 
-// Permite que o servidor entenda JSON no corpo da requisição
+// Middleware para entender JSON
 app.use(express.json());
 
-// Permite servir arquivos estáticos da pasta 'public'
+// Servir arquivos estáticos da pasta 'public'
 app.use(express.static('public'));
 
 // Rota raiz
@@ -21,53 +21,59 @@ app.get('/trabalhos', (req, res) => {
   return res.json(trabalhos);
 });
 
-// Rota GET para logins (opcional — útil para testes)
+// --------------------
+// Login de Usuário
+// --------------------
+
+// GET para ver todos (teste)
 app.get('/logins', (req, res) => {
   return res.json(logins);
 });
 
-// Rota POST para login (validação de email e senha)
+// POST para autenticar
 app.post('/logins', (req, res) => {
   const { email, senha } = req.body;
+
+  if (!email || !senha) {
+    return res.status(400).json({ mensagem: "Email e senha são obrigatórios." });
+  }
 
   const usuario = logins.find(user => user.email === email && user.senha === senha);
 
   if (usuario) {
-    res.status(200).json({ mensagem: "Login bem-sucedido" });
+    return res.status(200).json({ mensagem: "Login de usuário bem-sucedido" });
   } else {
-    res.status(401).json({ mensagem: "Credenciais inválidas" });
+    return res.status(401).json({ mensagem: "Credenciais inválidas" });
   }
 });
 
-app.get(express.json());
+// --------------------
+// Login de Empresa
+// --------------------
 
-
-
-  app.get('/logins_empresa', (req, res) => {
+// GET para ver todos (teste)
+app.get('/logins_empresa', (req, res) => {
   return res.json(logins_empresas);
 });
 
-// Rota POST para login (validação de email e senha)
+// POST para autenticar
 app.post('/logins_empresa', (req, res) => {
   const { conta, senha } = req.body;
 
-  const usuario = logins.find(user => user.conta === conta && user.senha === senha);
+  if (!conta || !senha) {
+    return res.status(400).json({ mensagem: "Conta e senha são obrigatórias." });
+  }
 
-  if (usuario) {
-    res.status(200).json({ mensagem: "Login bem-sucedido" });
+  const empresa = logins_empresas.find(emp => emp.conta === conta && emp.senha === senha);
+
+  if (empresa) {
+    return res.status(200).json({ mensagem: "Login de empresa bem-sucedido" });
   } else {
-    res.status(401).json({ mensagem: "Credenciais inválidas" });
+    return res.status(401).json({ mensagem: "Credenciais inválidas" });
   }
 });
-
-app.get(express.json());
-
-({
-
-
-})
-
 // Inicia o servidor
-app.listen(3000, () => {
+const PORT = 3000;
+app.listen(PORT, () => {
   console.log('App running on port 3000');
 });

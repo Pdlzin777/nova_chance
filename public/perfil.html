@@ -18,7 +18,8 @@
         <a href="index.html">Início</a>
         <a href="perfil.html" class="active">Perfil</a>
         <a href="config.html">Configurações</a>
-        <a href="paginaparaserprimiu.html">Suporte</a>
+        <a href="paginaparaserprimiu.html">Planos</a>
+        <a href="suporte.html">Suporte</a>
       </nav>
     </header>
     <main>
@@ -56,5 +57,41 @@
       <p>&copy; 2025 Nova Chance. Todos os direitos reservados.</p>
     </footer>
   </div>
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const dadosUsuario = JSON.parse(localStorage.getItem('usuarioLogado'));
+
+    if (!dadosUsuario) {
+      alert('Você precisa estar logado para acessar esta página.');
+      window.location.href = 'logins.html'; // ou login.html
+      return;
+    }
+
+    // Atualiza os campos com as informações
+    document.querySelector('.user-info h2').textContent = dadosUsuario.nome || 'Nome do Usuário';
+    document.querySelector('.user-info p:nth-of-type(1)').textContent = 'Email: ' + dadosUsuario.email;
+    document.querySelector('.user-info p:nth-of-type(2)').textContent = 'Empresa: ' + (dadosUsuario.empresa || 'N/A');
+
+    document.getElementById('nome').value = dadosUsuario.nome || '';
+    document.getElementById('email').value = dadosUsuario.email || '';
+    document.getElementById('empresa').value = dadosUsuario.empresa || '';
+    document.getElementById('telefone').value = dadosUsuario.telefone || '';
+
+    document.querySelector('.profile-form').addEventListener('submit', function (event) {
+  event.preventDefault();
+
+  const nome = document.getElementById('nome').value;
+  const email = document.getElementById('email').value;
+  const empresa = document.getElementById('empresa').value;
+  const telefone = document.getElementById('telefone').value;
+      // botão de atualizar o perfil 
+  const usuarioAtualizado = { nome, email, empresa, telefone };
+
+  localStorage.setItem('usuarioLogado', JSON.stringify(usuarioAtualizado));
+
+  alert('Perfil atualizado com sucesso!');
+});
+  });
+</script>
 </body>
 </html>

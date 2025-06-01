@@ -1,37 +1,26 @@
-let logins = [];
+document.getElementById('login-form').addEventListener('submit', async function (event) {
+  event.preventDefault();
 
-async function load() {
-  const response = await fetch('/logins');
-  logins = await response.json();
-  renderizarlogins();
-}
+  const email = document.getElementById('email').value;
+  const senha = document.getElementById('password').value;
 
+  const response = await fetch('/logins', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email, senha })
+  });
 
-// Rota para adicionar login
-app.post('/logins', (req, res) => {
-  const { email, senha } = req.body;
+  const resultado = await response.json();
 
-  if (!email || !senha) {
-    return res.status(400).json({ erro: 'Email e senha são obrigatórios.' });
+  if (response.ok) {
+    // Armazena as informações do usuário no localStorage
+    localStorage.setItem('usuarioLogado', JSON.stringify({ email }));
+
+    // Redireciona para a página de perfil
+    window.location.href = 'perfil.html';
+  } else {
+    alert(resultado.mensagem || 'Erro ao fazer login.');
   }
-
-  // Armazena o login (sem segurança, apenas exemplo)
-  logins.push({ email, senha });
-
-  return res.status(201).json({ mensagem: 'Login registrado com sucesso.' });
 });
-
-// Rota para listar todos os logins (teste)
-app.get('/logins', (req, res) => {
-  return res.json(logins);
-});
-
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
-  load();
-
-
-    
-
