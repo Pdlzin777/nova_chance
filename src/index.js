@@ -1,7 +1,7 @@
 import express from 'express';
 import { trabalhos } from './data/index.js';
 import { logins } from './data/logins.js';
-import { logins_empresas } from './logins_empresa.js';
+import { logins_empresas } from './data/logins_empresa.js';
 
 const app = express();
 
@@ -58,13 +58,13 @@ app.get('/logins_empresa', (req, res) => {
 
 // POST para autenticar
 app.post('/logins_empresa', (req, res) => {
-  const { conta, senha } = req.body;
+  const { email, senha } = req.body;
 
-  if (!conta || !senha) {
+  if (!email || !senha) {
     return res.status(400).json({ mensagem: "Conta e senha são obrigatórias." });
   }
 
-  const empresa = logins_empresas.find(emp => emp.conta === conta && emp.senha === senha);
+  const empresa = logins_empresas.find(emp => emp.email === email && emp.senha === senha);
 
   if (empresa) {
     return res.status(200).json({ mensagem: "Login de empresa bem-sucedido" });
