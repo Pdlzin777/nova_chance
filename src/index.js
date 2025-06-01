@@ -1,6 +1,7 @@
 import express from 'express';
 import { trabalhos } from './data/index.js';
 import { logins } from './data/logins.js';
+import { logins_empresas } from './data/logins_empresa.js';
 
 const app = express();
 
@@ -30,6 +31,27 @@ app.post('/logins', (req, res) => {
   const { email, senha } = req.body;
 
   const usuario = logins.find(user => user.email === email && user.senha === senha);
+
+  if (usuario) {
+    res.status(200).json({ mensagem: "Login bem-sucedido" });
+  } else {
+    res.status(401).json({ mensagem: "Credenciais inválidas" });
+  }
+});
+
+app.get(express.json());
+
+
+
+  app.get('/logins_empresa', (req, res) => {
+  return res.json(logins_empresas);
+});
+
+// Rota POST para login (validação de email e senha)
+app.post('/logins_empresa', (req, res) => {
+  const { conta, senha } = req.body;
+
+  const usuario = logins.find(user => user.conta === conta && user.senha === senha);
 
   if (usuario) {
     res.status(200).json({ mensagem: "Login bem-sucedido" });
