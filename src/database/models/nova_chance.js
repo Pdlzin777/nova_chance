@@ -29,7 +29,7 @@ function read(field, valor) {
  
 function readById(id) {
   if (id) {
-    const index = nova_chance.findIndex((nova_chancet) => investment.id === id);
+    const index = nova_chance.findIndex((nova_chance) => contas.id === id);
  
     if (!nova_chance[index]) {
       throw new Error('nova_chance not found');
