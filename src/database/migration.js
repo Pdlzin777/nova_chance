@@ -33,6 +33,8 @@ async function up() {
   const demandassql = `
     CREATE TABLE IF NOT EXISTS Demandas (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      cargo VARCHAR(100) NOT NULL,
+      valor VARCHAR(100) NOT NULL,
       descricao TEXT NOT NULL,
       formacao_id INTEGER NOT NULL,
       data_criacao DATE DEFAULT CURRENT_DATE,
