@@ -1,7 +1,4 @@
 import express from 'express';
-import { trabalhos } from './data/index.js';
-import { logins } from './data/logins.js';
-import { logins_empresas } from './data/logins_empresa.js';
 
 const app = express();
 
@@ -17,8 +14,8 @@ app.get('/', (req, res) => {
 });
 
 // Rota para listar trabalhos
-app.get('/trabalhos', (req, res) => {
-  return res.json(trabalhos);
+app.get('/demandas', (req, res) => {
+  return res.json(Demandas);
 });
 
 // --------------------
@@ -26,12 +23,13 @@ app.get('/trabalhos', (req, res) => {
 // --------------------
 
 // GET para ver todos (teste)
-app.get('/logins', (req, res) => {
-  return res.json(logins);
+app.get('/usuarios', (req, res) => {
+  return res.json( Usuarios);
 });
 
+
 // POST para autenticar
-app.post('/logins', (req, res) => {
+app.post('/auth', (req, res) => {
   const { email, senha } = req.body;
 
   if (!email || !senha) {

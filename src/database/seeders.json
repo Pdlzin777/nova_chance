@@ -1,0 +1,55 @@
+{
+  "Demandas": [
+    {
+      "cargo": "Garçom",
+      "valor": 100
+    },
+    {
+      "cargo": "Garçom",
+      "valor": 500
+    },
+    {
+      "cargo": "Designer Gráfico",
+      "valor": 180
+    },
+    {
+      "cargo": "Designer Gráfico",
+      "valor": 150
+    }
+  ],
+  "contas": [
+    {
+      "email": "amazom@gmail.com.br",
+      "senha": "amazom123"
+    },
+    {
+      "email": "carajas@gmail.com.br",
+      "senha": "carajas123"
+    },
+    {
+      "email": "soservi@gmail.com.br",
+      "senha": "soservi123"
+    },
+ 
+    {
+      "email": "pedro.novais@academico.ifpb.edu.br",
+      "senha": "Pele_2023"
+    },
+    {
+      "email": "joyce.trindade@academico.ifpb.edu.br",
+      "senha": "Pele_2024"
+    },
+    {
+      "email": "adryele.andrade@academico.ifpb.edu.br",
+      "senha": "Pele_2025"
+    },
+    {
+      "email": "oliveira.bianca@academico.ifpb.edu.br",
+      "senha": "Pele_2026"
+    },
+    {
+      "email": "ana.adelino@academico.ifpb.edu.br",
+      "senha": "Pele_2027"
+    }
+  ]
+}
