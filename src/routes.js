@@ -1,5 +1,5 @@
 import express from 'express';
-import Nova_Chance from './models/Nova_Chance.js';
+import demandas from './models/demandas.js';
  
 class HTTPError extends Error {
   constructor(message, code) {
@@ -10,63 +10,63 @@ class HTTPError extends Error {
  
 const router = express.Router();
  
-router.post('/Nova_Chance', async (req, res) => {
+router.post('/demandas', async (req, res) => {
   try {
-    const Nova_Chance = req.body;
+    const demandas = req.body;
  
-    const createdNova_Chance = await Nova_Chance.create(Nova_Chance);
+    const createddemandas = await demandas.create(demandas);
  
-    return res.json(createdNova_Chance);
+    return res.json(createddemandas);
   } catch (error) {
-    throw new HTTPError('Unable to create Nova_chance', 400);
+    throw new HTTPError('Unable to create demandas', 400);
   }
 });
  
-router.get('/Nova_Chance', async (req, res) => {
+router.get('/demandas', async (req, res) => {
   try {
     const { cargo } = req.query;
  
-    const Nova_Chance = await Nova_Chance.read('name', cargo);
+    const demandas = await demandas.read('name', cargo);
  
-    res.json(Nova_Chance);
+    res.json(demandas);
   } catch (error) {
-    throw new HTTPError('Unable to read Nova_Chance', 400);
+    throw new HTTPError('Unable to read demandas', 400);
   }
 });
  
-router.get('/Nova_Chance/:id', async (req, res) => {
+router.get('/demandas/:id', async (req, res) => {
   try {
     const id = req.params.id;
  
-    const Nova_Chance = await Nova_Chance.readById(id);
+    const demandas = await demandas.readById(id);
  
-    res.json(Nova_Chance);
+    res.json(demandas);
   } catch (error) {
-    throw new HTTPError('Unable to find Nova_Chance', 400);
+    throw new HTTPError('Unable to find demandas', 400);
   }
 });
  
-router.put('/Nova_Chance/:id', async (req, res) => {
+router.put('/demandas/:id', async (req, res) => {
   try {
-    const Nova_Chance = req.body;
+    const demandas = req.body;
  
     const id = req.params.id;
  
-    const updatedNova_Chance = await Nova_Chance.update({ ...Nova_Chance, id });
+    const updateddemandas = await demandas.update({ ...demandas, id });
  
-    return res.json(updatedNova_Chance);
+    return res.json(updateddemandas);
   } catch (error) {
-    throw new HTTPError('Unable to update Nova_Chance', 400);
+    throw new HTTPError('Unable to update demandas', 400);
   }
 });
  
-router.delete('/Nova_Chance/:id', async (req, res) => {
+router.delete('/demandas/:id', async (req, res) => {
   const id = req.params.id;
  
-  if (await Nova_Chance.remove(id)) {
+  if (await demandas.remove(id)) {
     res.sendStatus(204);
   } else {
-    throw new HTTPError('Unable to remove Nova_Chance', 400);
+    throw new HTTPError('Unable to remove demandas', 400);
   }
 });
  

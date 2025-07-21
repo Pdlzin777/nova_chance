@@ -31,11 +31,11 @@ async function up() {
   `;
 
   const demandassql = `
-    CREATE TABLE IF NOT EXISTS Demandas (
+    CREATE TABLE IF NOT EXISTS demandas (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       cargo VARCHAR(100) NOT NULL,
       valor VARCHAR(100) NOT NULL,
-      descricao TEXT NOT NULL,
+      descricao TEXT,
       formacao_id INTEGER NOT NULL,
       data_criacao DATE DEFAULT CURRENT_DATE,
       data_conclusao DATE,
