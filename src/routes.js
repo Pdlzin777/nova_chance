@@ -1,90 +1,87 @@
 import express from 'express';
-import demandas from './models/demandas.js';
- 
+import Demandas from './models/demandas.js'; // nome do model, conforme pasta "models"
+
 class HTTPError extends Error {
   constructor(message, code) {
     super(message);
     this.code = code;
   }
 }
- 
+
 const router = express.Router();
- 
-router.post('/demandas', async (req, res) => {
+
+// POST - Criar demanda
+router.post('/demandas', async (req, res, next) => {
   try {
-    const demandas = req.body;
- 
-    const createddemandas = await demandas.create(demandas);
- 
-    return res.json(createddemandas);
+    const dados = req.body;
+    const novaDemanda = await Demandas.create(dados);
+    res.status(201).json(novaDemanda);
   } catch (error) {
-    throw new HTTPError('Unable to create demandas', 400);
-  }
-});
- 
-router.get('/demandas', async (req, res) => {
-  try {
-    const { cargo } = req.query;
- 
-    const demandas = await demandas.read('name', cargo);
- 
-    res.json(demandas);
-  } catch (error) {
-    throw new HTTPError('Unable to read demandas', 400);
-  }
-});
- 
-router.get('/demandas/:id', async (req, res) => {
-  try {
-    const id = req.params.id;
- 
-    const demandas = await demandas.readById(id);
- 
-    res.json(demandas);
-  } catch (error) {
-    throw new HTTPError('Unable to find demandas', 400);
-  }
-});
- 
-router.put('/demandas/:id', async (req, res) => {
-  try {
-    const demandas = req.body;
- 
-    const id = req.params.id;
- 
-    const updateddemandas = await demandas.update({ ...demandas, id });
- 
-    return res.json(updateddemandas);
-  } catch (error) {
-    throw new HTTPError('Unable to update demandas', 400);
-  }
-});
- 
-router.delete('/demandas/:id', async (req, res) => {
-  const id = req.params.id;
- 
-  if (await demandas.remove(id)) {
-    res.sendStatus(204);
-  } else {
-    throw new HTTPError('Unable to remove demandas', 400);
-  }
-});
- 
-// 404 handler
-router.use((req, res, next) => {
-  res.status(404).json({ message: 'Content not found!' });
-});
- 
-// Error handler
-router.use((err, req, res, next) => {
-  // console.error(err.stack);
-  if (err instanceof HTTPError) {
-    res.status(err.code).json({ message: err.message });
-  } else {
-    res.status(500).json({ message: 'Something broke!' });
+    next(new HTTPError('Erro ao criar demanda', 400));
   }
 });
 
- 
+// GET - Listar todas ou filtrar por cargo
+router.get('/demandas', async (req, res, next) => {
+  try {
+    const { cargo } = req.query;
+    const resultado = await Demandas.read('cargo', cargo);
+    res.json(resultado);
+  } catch (error) {
+    next(new HTTPError('Erro ao buscar demandas', 400));
+  }
+});
+
+// GET - Buscar por ID
+router.get('/demandas/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const demanda = await Demandas.readById(id);
+    res.json(demanda);
+  } catch (error) {
+    next(new HTTPError('Demanda não encontrada', 404));
+  }
+});
+
+// PUT - Atualizar por ID
+router.put('/demandas/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const dados = req.body;
+    const atualizado = await Demandas.update({ ...dados, id });
+    res.json(atualizado);
+  } catch (error) {
+    next(new HTTPError('Erro ao atualizar demanda', 400));
+  }
+});
+
+// DELETE - Remover por ID
+router.delete('/demandas/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const sucesso = await Demandas.remove(id);
+    if (sucesso) {
+      res.sendStatus(204);
+    } else {
+      next(new HTTPError('Demanda não encontrada', 404));
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+// 404 para rotas não encontradas
+router.use((req, res) => {
+  res.status(404).json({ message: 'Rota não encontrada.' });
+});
+
+// Middleware de erro
+router.use((err, req, res, next) => {
+  if (err instanceof HTTPError) {
+    return res.status(err.code).json({ message: err.message });
+  }
+  console.error(err);
+  res.status(500).json({ message: 'Erro interno do servidor.' });
+});
+
 export default router;
- 
