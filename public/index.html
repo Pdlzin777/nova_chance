@@ -1,133 +1,135 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <link id="tema-estilo" rel="stylesheet" href="temaclaro.html">
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
+  <title>Lista de Demandas</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Postagem de Trabalho</title>
-  <link rel="shortcut icon" href="flaicon-png-transparente 1 1 (3).png" type="image/x-icon">
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #000;
-      color: #fff;
-    }
-
-    header {
-      background-color: #ddd;
-      padding: 15px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-  
-
-    nav a {
-      margin: 0 15px;
-      text-decoration: none;
-      color: #000;
-      font-weight: bold;
-    }
-
-    .main {
-      padding: 30px;
-      background-color: #000;
-      min-height: calc(100vh - 120px);
-    }
-
-    .jobs-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      justify-items: center;
-    }
-
-    .job-card {
-      background-color: #e0e0e0;
-      color: #000;
-      padding: 20px;
-      border-radius: 20px;
-      width: 200px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .job-card h3 {
-      margin: 0;
-    }
-
-    .job-card p {
-      margin: 5px 0 15px;
-    }
-
-    .job-card button {
-      background-color: #416b7e;
+      background-color: #121212;
       color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 20px;
-      cursor: pointer;
-    }
-
-    footer {
-      background-color: #ccc;
       padding: 20px;
+    }
+
+    h1 {
       text-align: center;
     }
 
-    .form-section {
-      margin-top: 30px;
+    .form {
+      margin-bottom: 30px;
       text-align: center;
     }
 
-    .form-section input {
+    .form input {
       padding: 10px;
       margin: 5px;
-      border: none;
       border-radius: 5px;
+      border: none;
     }
 
-    .form-section button {
+    .form button {
       padding: 10px 15px;
-      margin-left: 5px;
-      border: none;
-      background-color: #416b7e;
+      background-color: #2c7;
       color: white;
+      border: none;
       border-radius: 5px;
       cursor: pointer;
     }
-    
+
+    .card {
+      background-color: #1f1f1f;
+      padding: 20px;
+      margin: 15px auto;
+      border-radius: 10px;
+      max-width: 500px;
+    }
+
+    .card h3 {
+      margin: 0 0 10px 0;
+    }
+
+    .card p {
+      margin: 5px 0;
+    }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="logo"><img src="..//flaicon-png-transparente 1 1 (2).png" alt=""></div>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="empresa.html">Empresas</a>
-      <a href="paginaparaserprimiu.html">Planos</a>
-      <a href="perfil.html">Perfil</a>
-    </nav>
-  </header>
+  <h1>Demandas Cadastradas</h1>
 
-  <div class="main">
-    <div class="jobs-grid" id="job-list"></div>
-
-    <div class="form-section">
-      <input type="text" id="cargo" placeholder="Cargo">
-      <input type="number" id="valor" placeholder="Valor em Reais">
-      <button onclick="adicionarTrabalho()">Adicionar</button>
-    </div>
+  <div class="form">
+    <input type="text" id="cargo" placeholder="Cargo" />
+    <input type="number" id="valor" placeholder="Valor" />
+    <input type="text" id="descricao" placeholder="Descrição" />
+    <input type="number" id="formacao_id" placeholder="Formação ID" />
+    <input type="number" id="usuario_id" placeholder="Usuário ID" />
+    <button onclick="adicionarDemanda()">Adicionar</button>
   </div>
 
-  <footer>
-    © 2025 Oportunidades para Todos
-  </footer>
+  <div id="lista-demandas"></div>
 
-  <script src="script.js"></script>
+  <script>
+    async function carregarDemandas() {
+      const res = await fetch('/demandas');
+      const demandas = await res.json();
+
+      const container = document.getElementById('lista-demandas');
+      container.innerHTML = '';
+
+      demandas.forEach(d => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `
+          <h3>${d.cargo}</h3>
+          <p><strong>Valor:</strong> R$ ${d.valor}</p>
+          <p><strong>Descrição:</strong> ${d.descricao || '---'}</p>
+          <p><strong>Formação ID:</strong> ${d.formacao_id}</p>
+          <p><strong>Usuário ID:</strong> ${d.usuario_id}</p>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    async function adicionarDemanda() {
+      const cargo = document.getElementById('cargo').value;
+      const valor = document.getElementById('valor').value;
+      const descricao = document.getElementById('descricao').value;
+      const formacao_id = parseInt(document.getElementById('formacao_id').value);
+      const usuario_id = parseInt(document.getElementById('usuario_id').value);
+
+      if (!cargo || !valor || !formacao_id || !usuario_id) {
+        alert("Preencha todos os campos obrigatórios.");
+        return;
+      }
+
+      const nova = {
+        cargo,
+        valor,
+        descricao,
+        formacao_id,
+        usuario_id,
+        data_criacao: new Date().toISOString().split('T')[0],
+        status: 'pendente',
+        data_conclusao: null
+      };
+
+      const res = await fetch('/demandas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nova)
+      });
+
+      if (res.ok) {
+        await carregarDemandas();
+        document.querySelectorAll('input').forEach(i => i.value = '');
+      } else {
+        alert("Erro ao adicionar demanda.");
+      }
+    }
+
+    carregarDemandas();
+  </script>
+
 </body>
 </html>
