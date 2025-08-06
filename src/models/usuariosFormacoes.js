@@ -1,23 +1,30 @@
-import Database from '../database/database.js';
+import prisma from '../database/database.js';
 
 async function create({ usuario_id, formacao_id }) {
   if (!usuario_id || !formacao_id) {
     throw new Error('usuario_id e formacao_id são obrigatórios');
   }
 
-  const db = await Database.connect();
+  const created = await prisma.usuariosFormacoes.create({
+    data: {
+      usuario_id,
+      formacao_id,
+    },
+  });
 
-  await db.run(
-    `INSERT INTO UsuariosFormacoes (usuario_id, formacao_id) VALUES (?, ?)`,
-    [usuario_id, formacao_id]
-  );
-
-  return { usuario_id, formacao_id };
+  return created;
 }
 
-async function read() {
-  const db = await Database.connect();
-  return await db.all('SELECT * FROM UsuariosFormacoes');
+async function read(where) {
+  // Permitir filtragem por campos se necessário
+  const registros = await prisma.usuariosFormacoes.findMany({ where });
+
+  if (registros.length === 1 && where) {
+    return registros[0];
+  }
+
+  return registros;
 }
 
 export default { create, read };
+
