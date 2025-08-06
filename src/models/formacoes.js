@@ -1,75 +1,33 @@
 import prisma from '../database/database.js';
- 
-async function create({ name, value }) {
-  if (name && value) {
-    const createdInvestment = await prisma.investment.create({
-      data: { name, value },
-    });
- 
-    return createdInvestment;
-  } else {
-    throw new Error('Unable to create investment');
+
+async function create({ nome }) {
+  if (!nome) {
+    throw new Error('Nome da formação é obrigatório');
   }
+
+  const createdFormacao = await prisma.formacoes.create({
+    data: { nome },
+  });
+
+  return createdFormacao;
 }
- 
+
 async function read(where) {
-  if (where?.name) {
-    where.name = {
-      contains: where.name,
+  // Se quiser permitir filtragem por nome opcional
+  if (where?.nome) {
+    where.nome = {
+      contains: where.nome,
     };
   }
- 
-  const investments = await prisma.investment.findMany({ where });
- 
-  if (investments.length === 1 && where) {
-    return investments[0];
+
+  const formacoes = await prisma.formacoes.findMany({ where });
+
+  if (formacoes.length === 1 && where) {
+    return formacoes[0];
   }
- 
-  return investments;
+
+  return formacoes;
 }
- 
-async function readById(id) {
-  if (id) {
-    const investment = await prisma.investment.findUnique({
-      where: {
-        id,
-      },
-    });
- 
-    return investment;
-  } else {
-    throw new Error('Unable to find investment');
-  }
-}
- 
-async function update({ id, name, value }) {
-  if (name && value && id) {
-    const updatedInvestment = await prisma.investment.update({
-      where: {
-        id,
-      },
-      data: { name, value },
-    });
- 
-    return updatedInvestment;
-  } else {
-    throw new Error('Unable to update investment');
-  }
-}
- 
-async function remove(id) {
-  if (id) {
-    await prisma.investment.delete({
-      where: {
-        id,
-      },
-    });
- 
-    return true;
-  } else {
-    throw new Error('Unable to remove investment');
-  }
-}
- 
-export default { create, read, readById, update, remove };
- 
+
+export default { create, read };
+
