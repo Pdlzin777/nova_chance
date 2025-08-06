@@ -1,5 +1,6 @@
-import prisma from '../database/database.js';
+import prisma from '../database/database.js'; // Importa a instância do Prisma
 
+// Criação de nova demanda
 async function create({ cargo, valor, descricao, formacao_id, data_criacao, data_conclusao, status, usuario_id }) {
   if (!cargo || !valor || !formacao_id || !usuario_id) {
     throw new Error('Campos obrigatórios: cargo, valor, formacao_id e usuario_id');
@@ -21,6 +22,7 @@ async function create({ cargo, valor, descricao, formacao_id, data_criacao, data
   return created;
 }
 
+// Leitura de demandas com filtro por campo específico
 async function read(field, valor) {
   const where = {};
 
@@ -34,6 +36,7 @@ async function read(field, valor) {
   return await prisma.demanda.findMany({ where });
 }
 
+// Leitura de uma demanda por ID
 async function readById(id) {
   const demanda = await prisma.demanda.findUnique({
     where: { id: Number(id) },
@@ -46,8 +49,10 @@ async function readById(id) {
   return demanda;
 }
 
+// Atualização de demanda existente
 async function update({ id, cargo, valor, descricao, formacao_id, data_criacao, data_conclusao, status, usuario_id }) {
   const existing = await prisma.demanda.findUnique({ where: { id } });
+
   if (!existing) {
     throw new Error('Demanda não encontrada');
   }
@@ -69,8 +74,9 @@ async function update({ id, cargo, valor, descricao, formacao_id, data_criacao, 
   return updated;
 }
 
+// Remoção de demanda
 async function remove(id) {
-  await readById(id); // Garante que a demanda existe
+  await readById(id); // Garante que a demanda existe antes de deletar
   await prisma.demanda.delete({ where: { id } });
   return true;
 }

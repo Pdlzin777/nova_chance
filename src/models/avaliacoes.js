@@ -1,4 +1,4 @@
-import Database from '../database/database.js';
+import prisma from '../database/database.js';
 
 async function create({
   demanda_id,
@@ -8,39 +8,31 @@ async function create({
   comentario,
   data_avaliacao
 }) {
-  if (!demanda_id || !usuario_avaliador_id || !usuario_avaliado_id || pontuacao === undefined) {
+  if (
+    !demanda_id ||
+    !usuario_avaliador_id ||
+    !usuario_avaliado_id ||
+    pontuacao === undefined
+  ) {
     throw new Error('Campos obrigatórios estão ausentes');
   }
 
-  const db = await Database.connect();
-
-  await db.run(
-    `INSERT INTO Avaliacoes 
-      (demanda_id, usuario_avaliador_id, usuario_avaliado_id, pontuacao, comentario, data_avaliacao)
-     VALUES (?, ?, ?, ?, ?, ?)`,
-    [
+  const created = await prisma.avaliacao.create({
+    data: {
       demanda_id,
       usuario_avaliador_id,
       usuario_avaliado_id,
       pontuacao,
-      comentario || '',
-      data_avaliacao || null
-    ]
-  );
+      comentario: comentario || '',
+      data_avaliacao: data_avaliacao ? new Date(data_avaliacao) : null
+    },
+  });
 
-  return {
-    demanda_id,
-    usuario_avaliador_id,
-    usuario_avaliado_id,
-    pontuacao,
-    comentario,
-    data_avaliacao
-  };
+  return created;
 }
 
 async function read() {
-  const db = await Database.connect();
-  return await db.all('SELECT * FROM Avaliacoes');
+  return await prisma.avaliacao.findMany();
 }
 
 export default { create, read };
