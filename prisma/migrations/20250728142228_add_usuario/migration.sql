@@ -1,65 +1,60 @@
 generator client {
   provider = "prisma-client-js"
 }
- 
+
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
-PRAGMA foreign_keys=off;
-DROP TABLE "Investment";
-PRAGMA foreign_keys=on;
+model Usuario {
+  id       Int     @id @default(autoincrement())
+  nome     String
+  email    String  @unique
+  senha    String
+  formacoes UsuariosFormacoes[]
+  demandas Demandas[]
+  avaliacoesFeitas Avaliacoes[] @relation("Avaliador")
+  avaliacoesRecebidas Avaliacoes[] @relation("Avaliado")
+}
 
--- CreateTable
-CREATE TABLE "usuarios" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "nome" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "senha" TEXT NOT NULL
-);
+model Formacoes {
+  id    Int    @id @default(autoincrement())
+  nome  String
+  usuarios UsuariosFormacoes[]
+  demandas Demandas[]
+}
 
--- CreateTable
-CREATE TABLE "formacoes" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "nome" TEXT NOT NULL
-);
+model UsuariosFormacoes {
+  usuario_id Int
+  formacao_id Int
+  usuario Usuario @relation(fields: [usuario_id], references: [id])
+  formacao Formacoes @relation(fields: [formacao_id], references: [id])
 
--- CreateTable
-CREATE TABLE "usuariosformacoes" (
-    "usuario_id" INTEGER NOT NULL,
-    "formacao_id" INTEGER NOT NULL,
+  @@id([usuario_id, formacao_id])
+}
 
-    PRIMARY KEY ("usuario_id", "formacao_id"),
-    CONSTRAINT "usuariosformacoes_usuario_id_fkey" FOREIGN KEY ("usuario_id") REFERENCES "usuarios" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "usuariosformacoes_formacao_id_fkey" FOREIGN KEY ("formacao_id") REFERENCES "formacoes" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-);
+model Demandas {
+  id          Int     @id @default(autoincrement())
+  cargo       String
+  valor       String
+  descricao   String?
+  formacao_id Int
+  usuario_id  Int
+  status      String?
+  formacao    Formacoes @relation(fields: [formacao_id], references: [id])
+  usuario     Usuario   @relation(fields: [usuario_id], references: [id])
+  avaliacoes  Avaliacoes[]
+}
 
--- CreateTable
-CREATE TABLE "demandas" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "cargo" TEXT NOT NULL,
-    "valor" TEXT NOT NULL,
-    "descricao" TEXT,
-    "formacao_id" INTEGER NOT NULL,
-    "usuario_id" INTEGER NOT NULL,
-    "status" TEXT,
-    CONSTRAINT "demandas_formacao_id_fkey" FOREIGN KEY ("formacao_id") REFERENCES "formacoes" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "demandas_usuario_id_fkey" FOREIGN KEY ("usuario_id") REFERENCES "usuarios" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
--- CreateTable
-CREATE TABLE "avaliacoes" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "demanda_id" INTEGER NOT NULL,
-    "usuario_avaliador_id" INTEGER NOT NULL,
-    "usuario_avaliado_id" INTEGER NOT NULL,
-    "pontuacao" INTEGER,
-    "comentario" TEXT,
-    CONSTRAINT "avaliacoes_demanda_id_fkey" FOREIGN KEY ("demanda_id") REFERENCES "demandas" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "avaliacoes_usuario_avaliador_id_fkey" FOREIGN KEY ("usuario_avaliador_id") REFERENCES "usuarios" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "avaliacoes_usuario_avaliado_id_fkey" FOREIGN KEY ("usuario_avaliado_id") REFERENCES "usuarios" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
--- CreateIndex
-CREATE UNIQUE INDEX "usuarios_email_key" ON "usuarios"("email");
+model Avaliacoes {
+  id                   Int     @id @default(autoincrement())
+  demanda_id           Int
+  usuario_avaliador_id Int
+  usuario_avaliado_id  Int
+  pontuacao            Int?
+  comentario           String?
+  demanda              Demandas @relation(fields: [demanda_id], references: [id])
+  avaliador            Usuario  @relation("Avaliador", fields: [usuario_avaliador_id], references: [id])
+  avaliado             Usuario  @relation("Avaliado", fields: [usuario_avaliado_id], references: [id])
+}
