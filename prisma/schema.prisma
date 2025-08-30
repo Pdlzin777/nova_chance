@@ -1,76 +1,64 @@
 
-
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
-model Usuario {
-  id     Int     @id @default(autoincrement())
-  nome   String
-  email  String  @unique
-  senha  String
+generator client {
+  provider = "prisma-client-js"
+}
 
-  formacoes        UsuariosFormacoes[]
-  demandas         Demanda[]
-  avaliacoesFeitas Avaliacao[] @relation("AvaliacoesFeitas")
-  avaliacoesRecebidas Avaliacao[] @relation("AvaliacoesRecebidas")
-
-  @@map("usuarios")
+model usuario {
+  id        Int       @id @default(autoincrement())
+  nome      String
+  email     String    @unique   // 👈 garante que não repete
+  senha     String
+  formacoes UsuariosFormacoes[]
+  demandas  Demanda[]
+  avaliacoesAvaliador Avaliacao[] @relation("Avaliador")
+  avaliacoesAvaliado  Avaliacao[] @relation("Avaliado")
 }
 
 model Formacao {
-  id   Int    @id @default(autoincrement())
-  nome String
-
-  usuarios UsuariosFormacoes[]
-  demandas Demanda[]
-
-  @@map("formacoes")
+  id        Int       @id @default(autoincrement())
+  nome      String    @unique
+  usuarios  UsuariosFormacoes[]
+  demandas  Demanda[]
 }
 
 model UsuariosFormacoes {
+  id          Int     @id @default(autoincrement())
   usuario_id  Int
   formacao_id Int
 
-  usuario  Usuario  @relation(fields: [usuario_id], references: [id])
-  formacao Formacao @relation(fields: [formacao_id], references: [id])
-
-  @@id([usuario_id, formacao_id])
-  @@map("usuariosformacoes")
+  usuario   usuario  @relation(fields: [usuario_id], references: [id])
+  formacao  Formacao @relation(fields: [formacao_id], references: [id])
 }
 
 model Demanda {
-  id         Int     @id @default(autoincrement())
-  cargo      String
-  valor      String
-  descricao  String?
-  formacao_id Int
+  id          Int     @id @default(autoincrement())
+  cargo       String
+  valor       Int
+  descricao   String
+  status      String
   usuario_id  Int
-  status     String?
+  formacao_id Int
 
-  formacao Formacao @relation(fields: [formacao_id], references: [id])
-  usuario  Usuario  @relation(fields: [usuario_id], references: [id])
+  usuario   usuario  @relation(fields: [usuario_id], references: [id])
+  formacao  Formacao @relation(fields: [formacao_id], references: [id])
   avaliacoes Avaliacao[]
-
-  @@map("demandas")
 }
 
 model Avaliacao {
-  id                   Int  @id @default(autoincrement())
+  id                   Int    @id @default(autoincrement())
   demanda_id           Int
   usuario_avaliador_id Int
   usuario_avaliado_id  Int
-  pontuacao            Int?
-  comentario           String?
+  pontuacao            Int
+  comentario           String
 
-  demanda Demanda @relation(fields: [demanda_id], references: [id])
-  avaliador Usuario @relation("AvaliacoesFeitas", fields: [usuario_avaliador_id], references: [id])
-  avaliado  Usuario @relation("AvaliacoesRecebidas", fields: [usuario_avaliado_id], references: [id])
-
-  @@map("avaliacoes")
+  demanda    Demanda @relation(fields: [demanda_id], references: [id])
+  avaliador  usuario @relation("Avaliador", fields: [usuario_avaliador_id], references: [id])
+  avaliado   usuario @relation("Avaliado", fields: [usuario_avaliado_id], references: [id])
 }
+
