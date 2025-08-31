@@ -70,25 +70,32 @@
   <div id="lista-demandas"></div>
 
   <script>
+    const API_URL = "http://localhost:3000/demandas";
+
     async function carregarDemandas() {
-      const res = await fetch('/demandas');
-      const demandas = await res.json();
+      try {
+        const res = await fetch(API_URL);
+        const demandas = await res.json();
 
-      const container = document.getElementById('lista-demandas');
-      container.innerHTML = '';
+        const container = document.getElementById('lista-demandas');
+        container.innerHTML = '';
 
-      demandas.forEach(d => {
-        const div = document.createElement('div');
-        div.className = 'card';
-        div.innerHTML = `
-          <h3>${d.cargo}</h3>
-          <p><strong>Valor:</strong> R$ ${d.valor}</p>
-          <p><strong>Descrição:</strong> ${d.descricao || '---'}</p>
-          <p><strong>Formação ID:</strong> ${d.formacao_id}</p>
-          <p><strong>Usuário ID:</strong> ${d.usuario_id}</p>
-        `;
-        container.appendChild(div);
-      });
+        demandas.forEach(d => {
+          const div = document.createElement('div');
+          div.className = 'card';
+          div.innerHTML = `
+            <h3>${d.cargo}</h3>
+            <p><strong>Valor:</strong> R$ ${d.valor}</p>
+            <p><strong>Descrição:</strong> ${d.descricao || '---'}</p>
+            <p><strong>Formação ID:</strong> ${d.formacao_id}</p>
+            <p><strong>Usuário ID:</strong> ${d.usuario_id}</p>
+            <p><strong>Status:</strong> ${d.status}</p>
+          `;
+          container.appendChild(div);
+        });
+      } catch (err) {
+        console.error("Erro ao carregar demandas:", err);
+      }
     }
 
     async function adicionarDemanda() {
@@ -114,17 +121,21 @@
         data_conclusao: null
       };
 
-      const res = await fetch('/demandas', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(nova)
-      });
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(nova)
+        });
 
-      if (res.ok) {
-        await carregarDemandas();
-        document.querySelectorAll('input').forEach(i => i.value = '');
-      } else {
-        alert("Erro ao adicionar demanda.");
+        if (res.ok) {
+          await carregarDemandas();
+          document.querySelectorAll('input').forEach(i => i.value = '');
+        } else {
+          alert("Erro ao adicionar demanda.");
+        }
+      } catch (err) {
+        console.error("Erro ao enviar demanda:", err);
       }
     }
 
