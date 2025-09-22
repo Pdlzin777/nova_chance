@@ -1,26 +1,19 @@
-document.getElementById('login-form').addEventListener('submit', async function (event) {
+import API from './services/api.js';
+ 
+const form = document.querySelector('form');
+ 
+window.handleSubmit = handleSubmit;
+ 
+async function handleSubmit(event) {
   event.preventDefault();
-
-  const email = document.getElementById('email').value;
-  const senha = document.getElementById('password').value;
-
-  const response = await fetch('/logins_empresa', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ email, senha })
-  });
-
-  const resultado = await response.json();
-
-  if (response.ok) {
-    // Armazena as informações do usuário no localStorage
-    localStorage.setItem('usuarioLogado', JSON.stringify({ email }));
-
-    // Redireciona para a página de perfil
-    window.location.href = 'perfil.html';
+ 
+  const user = Object.fromEntries(new FormData(form));
+ 
+  const { email } = await API.create('/users', user);
+ 
+  if (email) {
+    location.href = '/criar_conta_como_empresa.html';
   } else {
-    alert(resultado.mensagem || 'Erro ao fazer login.');
+    console.log('Error no cadastro');
   }
-});
+}

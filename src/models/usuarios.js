@@ -35,4 +35,5 @@ async function read(where) {
   return usuarios;
 }
 
+
 export default { create, read };

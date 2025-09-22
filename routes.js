@@ -1,5 +1,5 @@
 import express from 'express';
-import Demandas from './models/demandas.js'; // nome do model, conforme pasta "models"
+import Demandas from './src/models/demandas.js'; // nome do model, conforme pasta "models"
 
 class HTTPError extends Error {
   constructor(message, code) {
@@ -9,6 +9,11 @@ class HTTPError extends Error {
 }
 
 const router = express.Router();
+
+// Rota raiz
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
 
 // POST - Criar demanda
 router.post('/demandas', async (req, res, next) => {
