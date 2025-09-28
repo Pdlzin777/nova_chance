@@ -1,6 +1,5 @@
-import express from 'express';
-import Demandas from './src/models/demandas.js'; // nome do model, conforme pasta "models"
-
+import { Router } from 'express';
+import demandas from './models/demandas.js'; // seu model
 class HTTPError extends Error {
   constructor(message, code) {
     super(message);
@@ -8,10 +7,10 @@ class HTTPError extends Error {
   }
 }
 
-const router = express.Router();
+const router = Router();
 
-// Rota raiz
-app.get('/', (req, res) => {
+// Rota raiz (apenas para teste)
+router.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
@@ -19,7 +18,7 @@ app.get('/', (req, res) => {
 router.post('/demandas', async (req, res, next) => {
   try {
     const dados = req.body;
-    const novaDemanda = await Demandas.create(dados);
+    const novaDemanda = await demandas.create(dados); // corrigido: Demandas -> demandas
     res.status(201).json(novaDemanda);
   } catch (error) {
     next(new HTTPError('Erro ao criar demanda', 400));
@@ -30,7 +29,7 @@ router.post('/demandas', async (req, res, next) => {
 router.get('/demandas', async (req, res, next) => {
   try {
     const { cargo } = req.query;
-    const resultado = await Demandas.read('cargo', cargo);
+    const resultado = cargo ? await demandas.read('cargo', cargo) : await demandas.read();
     res.json(resultado);
   } catch (error) {
     next(new HTTPError('Erro ao buscar demandas', 400));
@@ -41,10 +40,11 @@ router.get('/demandas', async (req, res, next) => {
 router.get('/demandas/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    const demanda = await Demandas.readById(id);
+    const demanda = await demandas.readById(id);
+    if (!demanda) throw new HTTPError('Demanda não encontrada', 404);
     res.json(demanda);
   } catch (error) {
-    next(new HTTPError('Demanda não encontrada', 404));
+    next(error instanceof HTTPError ? error : new HTTPError('Erro ao buscar demanda', 400));
   }
 });
 
@@ -53,7 +53,7 @@ router.put('/demandas/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const dados = req.body;
-    const atualizado = await Demandas.update({ ...dados, id });
+    const atualizado = await demandas.update({ ...dados, id });
     res.json(atualizado);
   } catch (error) {
     next(new HTTPError('Erro ao atualizar demanda', 400));
@@ -64,7 +64,7 @@ router.put('/demandas/:id', async (req, res, next) => {
 router.delete('/demandas/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    const sucesso = await Demandas.remove(id);
+    const sucesso = await demandas.remove(id);
     if (sucesso) {
       res.sendStatus(204);
     } else {

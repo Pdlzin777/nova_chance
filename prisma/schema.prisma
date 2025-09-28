@@ -13,29 +13,39 @@ model usuario {
   nome      String
   email     String    @unique   // 👈 garante que não repete
   senha     String
-  formacoes UsuariosFormacoes[]
-  demandas  Demanda[]
-  avaliacoesAvaliador Avaliacao[] @relation("Avaliador")
-  avaliacoesAvaliado  Avaliacao[] @relation("Avaliado")
+  formacoes usuariosformacoes[]
+  demandas  demanda[]
+  
 }
 
-model Formacao {
+model empresa {
+  id         Int      @id @default(autoincrement())
+  nome       String
+  cnpj       String   @unique
+  telefone   String
+  email      String   @unique
+  redeSocial String?
+  senha      String
+  createdAt  DateTime @default(now())
+}
+
+model formacao {
   id        Int       @id @default(autoincrement())
   nome      String    @unique
-  usuarios  UsuariosFormacoes[]
-  demandas  Demanda[]
+  usuarios  usuariosformacoes[]
+  demandas  demanda[]
 }
 
-model UsuariosFormacoes {
+model usuariosformacoes {
   id          Int     @id @default(autoincrement())
   usuario_id  Int
   formacao_id Int
 
   usuario   usuario  @relation(fields: [usuario_id], references: [id])
-  formacao  Formacao @relation(fields: [formacao_id], references: [id])
+  formacao  formacao @relation(fields: [formacao_id], references: [id])
 }
 
-model Demanda {
+model demanda {
   id          Int     @id @default(autoincrement())
   cargo       String
   valor       Int
@@ -45,11 +55,11 @@ model Demanda {
   formacao_id Int
 
   usuario   usuario  @relation(fields: [usuario_id], references: [id])
-  formacao  Formacao @relation(fields: [formacao_id], references: [id])
-  avaliacoes Avaliacao[]
+  formacao  formacao @relation(fields: [formacao_id], references: [id])
+  avaliacoes avaliacao[]
 }
 
-model Avaliacao {
+model avaliacao {
   id                   Int    @id @default(autoincrement())
   demanda_id           Int
   usuario_avaliador_id Int
@@ -57,8 +67,7 @@ model Avaliacao {
   pontuacao            Int
   comentario           String
 
-  demanda    Demanda @relation(fields: [demanda_id], references: [id])
-  avaliador  usuario @relation("Avaliador", fields: [usuario_avaliador_id], references: [id])
-  avaliado   usuario @relation("Avaliado", fields: [usuario_avaliado_id], references: [id])
+  demanda    demanda @relation(fields: [demanda_id], references: [id])
+ 
 }
 

@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crie Sua Conta</title>
   <link rel="stylesheet" href="../css/estilo_paginadeloginempregado.css">
-  <link rel="shortcut icon" href="../../docs/flaicon-png-transparente 1 1 (3).png" type="image/x-icon">
-  <link rel="stylesheet" href="scriptbemvindo.js">
+  <link rel="shortcut icon" href="../../docs/flaicon-png-transparente.png" type="image/x-icon">
 </head>
 <body>
   <div class="form-container">
@@ -14,23 +13,24 @@
     <div class="left-section">
       <h1>Crie<br>Sua Conta</h1>
       <p>Complete o Formulário Para Fazer o seu cadastro no site Nova Chance</p>
-      <a href="criar_conta_como_empresa.html" class="create-company-account">Criar conta como empresa</a>
+      <a href="/" class="create-company-account">Voltar</a>
+      <a href="/html/logins.html"create-company-account"> Faça o seu Login</a>
     </div>
 
     <!-- Seção direita -->
     <div class="right-section">
-      <form action="#" method="post">
+      <form id="usuarioForm">
         <div class="form-group">
-          <input type="text" placeholder="Primeiro Nome *" required>
-          <input type="text" placeholder="Segundo Nome">
+          <input type="text" id="primeiroNome" placeholder="Primeiro Nome *" required>
+          <input type="text" id="segundoNome" placeholder="Segundo Nome">
         </div>
         <div class="form-group">
-          <input type="text" placeholder="Telefone *" required>
-          <input type="email" placeholder="Gmail *" required>
+          <input type="text" id="telefone" placeholder="Telefone *" required>
+          <input type="email" id="email" placeholder="Email *" required>
         </div>
         <div class="form-group">
-          <input type="date" placeholder="Data de Aniversário *" required>
-          <select required>
+          <input type="date" id="dataNascimento" placeholder="Data de Nascimento *" required>
+          <select id="ensino" required>
             <option value="" disabled selected>Ensino *</option>
             <option value="fundamental">Ensino Fundamental</option>
             <option value="medio">Ensino Médio</option>
@@ -38,15 +38,66 @@
           </select>
         </div>
         <div class="form-group">
-          <input type="url" placeholder="Link de Rede Social">
-          <input type="password" placeholder="Senha *" required>
+          <input type="url" id="redeSocial" placeholder="Link de Rede Social">
+          <input type="password" id="senha" placeholder="Senha *" required>
         </div>
         <div class="form-group">
-          <input type="password" placeholder="Confirmar Senha *" required>
+          <input type="password" id="confirmarSenha" placeholder="Confirmar Senha *" required>
         </div>
         <button type="submit" class="submit-button">Enviar</button>
       </form>
     </div>
   </div>
+
+  <script>
+    document.getElementById("usuarioForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const senha = document.getElementById("senha").value;
+      const confirmarSenha = document.getElementById("confirmarSenha").value;
+      if (senha !== confirmarSenha) {
+        alert("❌ As senhas não coincidem!");
+        return;
+      }
+
+      const usuario = {
+        primeiroNome: document.getElementById("primeiroNome").value,
+        segundoNome: document.getElementById("segundoNome").value,
+        telefone: document.getElementById("telefone").value,
+        email: document.getElementById("email").value,
+        dataNascimento: document.getElementById("dataNascimento").value,
+        ensino: document.getElementById("ensino").value,
+        redeSocial: document.getElementById("redeSocial").value,
+        senha: senha
+      };
+
+      try {
+        // Envia para a rota de usuários
+        const res = await fetch("/usuarios", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(usuario)
+        });
+
+        if (res.ok) {
+          alert("✅ Usuário cadastrado com sucesso!");
+          // Marca usuário como logado
+          localStorage.setItem("usuarioLogado", "true");
+          window.location.href = "/dashboard.html"; // página interna
+        } else {
+          const data = await res.json();
+          alert("❌ Erro ao cadastrar: " + (data.error || "Erro desconhecido"));
+        }
+      } catch (err) {
+        console.error(err);
+        alert("❌ Falha na comunicação com o servidor.");
+      }
+    });
+
+    // Bloqueia acesso à página se usuário já estiver logado
+    if (localStorage.getItem("usuarioLogado") === "true") {
+      window.location.href = "/dashboard.html";
+    }
+  </script>
 </body>
 </html>

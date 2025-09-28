@@ -13,6 +13,14 @@ async function main() {
     ]
   });
 
+   await prisma.empresa.createMany({
+    data: [
+      { nome: "Soservi", email: "Soservi@example.com", senha: "123456",cnpj:"1111111111",telefone:"83900002345",redeSocial:"@soservi"},
+      { nome: "Carajas", email: "Carajas@example.com", senha: "123456",cnpj:"22222222222",telefone:"83911112222",redeSocial:"@carajas" },
+      { nome: "Kairos Segurança", email: "Kairos@example.com", senha: "123456",cnpj:"3333333333",telefone:"83999998888",redeSocial:"@kairos"}
+    ]
+  });
+
   // Formações
   await prisma.formacao.createMany({
     data: [
@@ -23,7 +31,7 @@ async function main() {
   });
 
   // UsuáriosFormações
-  await prisma.usuariosFormacoes.createMany({
+  await prisma.usuariosformacoes.createMany({
     data: [
       { usuario_id: 1, formacao_id: 1 },
       { usuario_id: 2, formacao_id: 2 },
