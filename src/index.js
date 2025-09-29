@@ -6,6 +6,8 @@ import router from './routes.js';
 import { PrismaClient } from '@prisma/client';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import bcrypt from "bcrypt";
+import { gerarToken } from "./utils/jwt.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,61 +33,39 @@ server.use(express.json());
 server.use(express.static('public'));
 
 // Rotas
-server.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/html/criar_conta_como_empresa.html'));
-});
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
-server.use('/api', router);
-
-server.post('/empresas', async (req, res) => {
+// rota de login
+server.post("/logins", async (req, res) => {
   try {
-    const { nome, cnpj, telefone, email, redeSocial, senha } = req.body;
+    const { email, senha } = req.body;
 
-    const novaEmpresa = await prisma.empresa.create({
-      data: { nome, cnpj, telefone, email, redeSocial, senha },
-    });
-
-    res.json(novaEmpresa);
-  } catch (err) {
-    console.error('Erro ao cadastrar empresa:', err);
-    res.status(500).json({ error: 'Erro ao cadastrar empresa' });
-  }
-});
-
-server.post("/login", async (req, res) => {
-  const { email, senha } = req.body;
-
-  try {
-    const usuario = await prisma.usuario.findUnique({ where: { email } });
-
-    if (!usuario || usuario.senha !== senha) {
-      return res.status(401).json({ error: "Email ou senha incorretos" });
-    }
-
-    res.json({ message: "Login bem-sucedido" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Erro no servidor" });
-  }
-});
-
-server.post("/loginempresa", async (req, res) => {
-  const { email, senha } = req.body;
-
-  try {
+    // procura empresa no banco
     const empresa = await prisma.empresa.findUnique({ where: { email } });
-
-    if (!usuario || usuario.senha !== senha) {
-      return res.status(401).json({ error: "Email ou senha incorretos" });
+    if (!empresa) {
+      return res.status(401).json({ error: "Email ou senha inválidos" });
     }
 
-    res.json({ message: "Login bem-sucedido" });
+    // compara a senha
+    const senhaValida = await bcrypt.compare(senha, empresa.senha);
+    if (!senhaValida) {
+      return res.status(401).json({ error: "Email ou senha inválidos" });
+    }
+
+    // gera token JWT
+    const token = jwt.sign(
+      { id: empresa.id, email: empresa.email }, // payload
+      process.env.JWT_SECRET || "chave_super_secreta", // chave
+      { expiresIn: "2h" } // expira em 2h
+    );
+
+    return res.json({ token });
   } catch (err) {
-    console.error(err);
+    console.error("Erro no login:", err);
     res.status(500).json({ error: "Erro no servidor" });
   }
 });
-
 
 // Start do servidor
 server.listen(3000, () => {

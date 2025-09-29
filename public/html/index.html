@@ -55,7 +55,13 @@
   </style>
 </head>
 <body>
-
+<script src="../js/auth.js"></script>
+<script>
+  if (!getToken()) {
+    alert("Você precisa estar logado para acessar essa página");
+    window.location.href = "login.html";
+  }
+</script>
   <h1>Demandas Cadastradas</h1>
 
   <div class="form">
@@ -187,6 +193,8 @@ const res = await fetch("/usuarios", {
   body: JSON.stringify(usuario)
   });
 </script>
+
+
 
 
 </body>
