@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Lista de Demandas</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -55,6 +56,42 @@
   </style>
 </head>
 <body>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dropdown
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+        </li>
+      </ul>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>
 <script src="../js/auth.js"></script>
 <script>
   if (!getToken()) {
@@ -64,14 +101,45 @@
 </script>
   <h1>Demandas Cadastradas</h1>
 
-  <div class="form">
-    <input type="text" id="cargo" placeholder="Cargo" />
-    <input type="number" id="valor" placeholder="Valor" />
-    <input type="text" id="descricao" placeholder="Descrição" />
-    <input type="number" id="formacao_id" placeholder="Formação ID" />
-    <input type="number" id="usuario_id" placeholder="Usuário ID" />
-    <button onclick="adicionarDemanda()">Adicionar</button>
-  </div>
+  <form id="form-demanda">
+  <input id="cargo" placeholder="Cargo" required>
+  <input id="valor" type="number" min="0" required>
+  <textarea id="descricao" placeholder="Descrição detalhada" required></textarea>
+  <button type="submit">Enviar</button>
+</form>
+
+<script>
+document.getElementById("form-demanda").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const cargo = document.getElementById("cargo").value.trim();
+  const valor = Number(document.getElementById("valor").value);
+  const descricao = document.getElementById("descricao").value.trim();
+
+  // ✅ Validação no front-end
+  if (!cargo || cargo.length < 3) return alert("Cargo inválido.");
+  if (isNaN(valor) || valor < 0) return alert("Valor deve ser positivo.");
+  if (!descricao || descricao.length < 10) return alert("Descrição muito curta.");
+
+  // Se passou, envia pro servidor
+  const res = await fetch("/api/demandas", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + localStorage.getItem("token")
+    },
+    body: JSON.stringify({ cargo, valor, descricao, usuario_id: 1, formacao_id: 1 })
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    alert("Erro: " + (data.error || data.detalhes?.join(", ")));
+  } else {
+    alert("Demanda criada com sucesso!");
+  }
+});
+</script>
+
 
   <div id="lista-demandas"></div>
 

@@ -10,24 +10,25 @@ generator client {
 
 model usuario {
   id        Int       @id @default(autoincrement())
-  nome      String
-  email     String    @unique   // 👈 garante que não repete
-  senha     String
+  nome      String    @db.VarChar(100)       // NOT NULL por padrão
+  email     String    @unique                // UNIQUE garante e-mails únicos
+  senha     String                             // NOT NULL (padrão)
   formacoes usuariosformacoes[]
   demandas  demanda[]
-  
+
 }
 
 model empresa {
   id         Int      @id @default(autoincrement())
-  nome       String
-  cnpj       String   @unique
-  telefone   String
-  email      String   @unique
-  redeSocial String?
+  nome       String    @db.VarChar(100)
+  cnpj       String    @unique                // UNIQUE evita duplicar CNPJs
+  telefone   String    @db.VarChar(20)
+  email      String    @unique
+  redeSocial String?   @db.VarChar(255)
   senha      String
-  createdAt  DateTime @default(now())
+  createdAt  DateTime  @default(now())
 }
+
 
 model formacao {
   id        Int       @id @default(autoincrement())
@@ -46,11 +47,11 @@ model usuariosformacoes {
 }
 
 model demanda {
-  id          Int     @id @default(autoincrement())
-  cargo       String
-  valor       Int
+  id          Int      @id @default(autoincrement())
+  cargo       String    @db.VarChar(100)
+  valor       Int       @default(0) @check("valor >= 0")  // CHECK: não permite valor negativo
   descricao   String
-  status      String
+  status      String    @default("aberta")
   usuario_id  Int
   formacao_id Int
 

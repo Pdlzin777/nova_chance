@@ -106,6 +106,27 @@ router.delete("/demandas/:id", autenticarToken, async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: "Erro ao excluir demanda" });
   }
+  });
+
+  import { demandaSchema } from "./validators/demandaValidator.js";
+
+// rota POST /demandas
+router.post("/demandas", autenticarToken, async (req, res) => {
+  try {
+    const dadosValidados = demandaSchema.parse(req.body); // ✅ Validação com Zod
+    const nova = await prisma.demanda.create({ data: dadosValidados });
+    res.status(201).json(nova);
+  } catch (err) {
+    if (err.name === "ZodError") {
+      return res.status(400).json({
+        error: "Erro de validação",
+        detalhes: err.errors.map(e => e.message)
+      });
+    }
+    res.status(500).json({ error: "Erro ao criar demanda" });
+  }
 });
+
+
 
 export default router;

@@ -1,0 +1,8 @@
+# Porta do servidor
+PORT=3000
+
+# Caminho do banco (para Prisma com SQLite)
+DATABASE_URL="file:./dev.db"
+
+# Chave secreta para JWT
+JWT_SECRET="chave_super_secreta"
