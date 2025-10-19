@@ -1,92 +1,111 @@
 import { Router } from 'express';
-import demandas from './models/demandas.js'; // seu model
-class HTTPError extends Error {
-  constructor(message, code) {
-    super(message);
-    this.code = code;
-  }
-}
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const router = Router();
+const prisma = new PrismaClient();
 
-// Rota raiz (apenas para teste)
-router.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+// ======================
+// Middleware de autenticação
+// ======================
+function autenticarToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
 
-// POST - Criar demanda
-router.post('/demandas', async (req, res, next) => {
+  if (!token) return res.status(401).json({ error: "Token não fornecido" });
+
+  jwt.verify(token, process.env.JWT_SECRET || "chave_super_secreta", (err, user) => {
+    if (err) return res.status(403).json({ error: "Token inválido ou expirado" });
+    req.user = user;
+    next();
+  });
+}
+
+// ======================
+// Rota de login
+// ======================
+router.post("/login", async (req, res) => {
   try {
-    const dados = req.body;
-    const novaDemanda = await demandas.create(dados); // corrigido: Demandas -> demandas
-    res.status(201).json(novaDemanda);
-  } catch (error) {
-    next(new HTTPError('Erro ao criar demanda', 400));
+    const { email, senha } = req.body;
+    const empresa = await prisma.empresa.findUnique({ where: { email } });
+
+    if (!empresa) return res.status(401).json({ error: "Email ou senha inválidos" });
+
+    const senhaValida = await bcrypt.compare(senha, empresa.senha);
+    if (!senhaValida) return res.status(401).json({ error: "Email ou senha inválidos" });
+
+    const token = jwt.sign(
+      { id: empresa.id, email: empresa.email },
+      process.env.JWT_SECRET || "chave_super_secreta",
+      { expiresIn: "2h" }
+    );
+
+    return res.json({ token });
+  } catch (err) {
+    console.error("Erro no login:", err);
+    res.status(500).json({ error: "Erro no servidor" });
   }
 });
 
-// GET - Listar todas ou filtrar por cargo
-router.get('/demandas', async (req, res, next) => {
+// ======================
+// Rota de perfil (protegida por JWT)
+// ======================
+router.get("/perfil", autenticarToken, async (req, res) => {
   try {
-    const { cargo } = req.query;
-    const resultado = cargo ? await demandas.read('cargo', cargo) : await demandas.read();
-    res.json(resultado);
-  } catch (error) {
-    next(new HTTPError('Erro ao buscar demandas', 400));
+    const empresa = await prisma.empresa.findUnique({
+      where: { id: req.user.id },
+      select: { id: true, nome: true, email: true, cnpj: true, telefone: true, redeSocial: true }
+    });
+    res.json(empresa);
+  } catch (err) {
+    console.error("Erro ao buscar perfil:", err);
+    res.status(500).json({ error: "Erro no servidor" });
   }
 });
 
-// GET - Buscar por ID
-router.get('/demandas/:id', async (req, res, next) => {
+// ======================
+// Rotas de demandas (CRUD básico)
+// ======================
+router.get("/demandas", async (req, res) => {
+  try {
+    const demandas = await prisma.demanda.findMany();
+    res.json(demandas);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao listar demandas" });
+  }
+});
+
+router.post("/demandas", autenticarToken, async (req, res) => {
+  try {
+    const nova = await prisma.demanda.create({ data: req.body });
+    res.status(201).json(nova);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao criar demanda" });
+  }
+});
+
+router.put("/demandas/:id", autenticarToken, async (req, res) => {
   try {
     const { id } = req.params;
-    const demanda = await demandas.readById(id);
-    if (!demanda) throw new HTTPError('Demanda não encontrada', 404);
-    res.json(demanda);
-  } catch (error) {
-    next(error instanceof HTTPError ? error : new HTTPError('Erro ao buscar demanda', 400));
+    const atualizada = await prisma.demanda.update({
+      where: { id: Number(id) },
+      data: req.body
+    });
+    res.json(atualizada);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao atualizar demanda" });
   }
 });
 
-// PUT - Atualizar por ID
-router.put('/demandas/:id', async (req, res, next) => {
+router.delete("/demandas/:id", autenticarToken, async (req, res) => {
   try {
     const { id } = req.params;
-    const dados = req.body;
-    const atualizado = await demandas.update({ ...dados, id });
-    res.json(atualizado);
-  } catch (error) {
-    next(new HTTPError('Erro ao atualizar demanda', 400));
+    await prisma.demanda.delete({ where: { id: Number(id) } });
+    res.sendStatus(204);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao excluir demanda" });
   }
-});
-
-// DELETE - Remover por ID
-router.delete('/demandas/:id', async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const sucesso = await demandas.remove(id);
-    if (sucesso) {
-      res.sendStatus(204);
-    } else {
-      next(new HTTPError('Demanda não encontrada', 404));
-    }
-  } catch (error) {
-    next(error);
-  }
-});
-
-// 404 para rotas não encontradas
-router.use((req, res) => {
-  res.status(404).json({ message: 'Rota não encontrada.' });
-});
-
-// Middleware de erro
-router.use((err, req, res, next) => {
-  if (err instanceof HTTPError) {
-    return res.status(err.code).json({ message: err.message });
-  }
-  console.error(err);
-  res.status(500).json({ message: 'Erro interno do servidor.' });
 });
 
 export default router;
