@@ -1,4 +1,4 @@
-
+// ---------- CONFIGURAÇÃO ----------
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
@@ -8,58 +8,65 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model usuario {
-  id        Int       @id @default(autoincrement())
-  nome      String    @db.VarChar(100)       // NOT NULL por padrão
-  email     String    @unique                // UNIQUE garante e-mails únicos
-  senha     String                             // NOT NULL (padrão)
-  formacoes usuariosformacoes[]
-  demandas  demanda[]
+// ---------- MODELOS ----------
 
+// Usuário
+model usuario {
+  id         Int                 @id @default(autoincrement())
+  nome       String
+  email      String              @unique
+  senha      String
+  formacoes  usuariosformacoes[]
+  demandas   demanda[]
+  avaliacoes avaliacao[]         @relation("UsuarioAvaliacoes")
 }
 
+// Empresa
 model empresa {
   id         Int      @id @default(autoincrement())
-  nome       String    @db.VarChar(100)
-  cnpj       String    @unique                // UNIQUE evita duplicar CNPJs
-  telefone   String    @db.VarChar(20)
-  email      String    @unique
-  redeSocial String?   @db.VarChar(255)
+  nome       String
+  cnpj       String   @unique
+  telefone   String
+  email      String   @unique
+  redeSocial String?
   senha      String
-  createdAt  DateTime  @default(now())
+  createdAt  DateTime @default(now())
 }
 
-
+// Formação
 model formacao {
-  id        Int       @id @default(autoincrement())
-  nome      String    @unique
-  usuarios  usuariosformacoes[]
-  demandas  demanda[]
+  id       Int                 @id @default(autoincrement())
+  nome     String              @unique
+  usuarios usuariosformacoes[]
+  demandas demanda[]
 }
 
+// Relação usuário-formação
 model usuariosformacoes {
-  id          Int     @id @default(autoincrement())
+  id          Int @id @default(autoincrement())
   usuario_id  Int
   formacao_id Int
 
-  usuario   usuario  @relation(fields: [usuario_id], references: [id])
-  formacao  formacao @relation(fields: [formacao_id], references: [id])
+  usuario  usuario  @relation(fields: [usuario_id], references: [id])
+  formacao formacao @relation(fields: [formacao_id], references: [id])
 }
 
+// Demanda
 model demanda {
-  id          Int      @id @default(autoincrement())
-  cargo       String    @db.VarChar(100)
-  valor       Int       @default(0) @check("valor >= 0")  // CHECK: não permite valor negativo
+  id          Int    @id @default(autoincrement())
+  cargo       String
+  valor       Int    @default(0)
   descricao   String
-  status      String    @default("aberta")
+  status      String @default("aberta")
   usuario_id  Int
   formacao_id Int
 
-  usuario   usuario  @relation(fields: [usuario_id], references: [id])
-  formacao  formacao @relation(fields: [formacao_id], references: [id])
+  usuario    usuario     @relation(fields: [usuario_id], references: [id])
+  formacao   formacao    @relation(fields: [formacao_id], references: [id])
   avaliacoes avaliacao[]
 }
 
+// Avaliação
 model avaliacao {
   id                   Int    @id @default(autoincrement())
   demanda_id           Int
@@ -68,7 +75,6 @@ model avaliacao {
   pontuacao            Int
   comentario           String
 
-  demanda    demanda @relation(fields: [demanda_id], references: [id])
- 
+  demanda demanda  @relation(fields: [demanda_id], references: [id], onDelete: Cascade)
+  usuario usuario? @relation("UsuarioAvaliacoes", fields: [usuario_avaliado_id], references: [id])
 }
-
