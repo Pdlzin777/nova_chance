@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import SendMail from './services/SendMail.js';
 
 const router = Router();
 const prisma = new PrismaClient();
