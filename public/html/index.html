@@ -53,93 +53,71 @@
     .card p {
       margin: 5px 0;
     }
+
+    /* Add style for the image */
+    .image-container {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .image-container img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+    }
   </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-        </li>
-      </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-    </div>
+  <!-- Add image to the page -->
+  <div class="image-container">
+    <img src="images/trabalho-image.webp" alt="Trabalho de Futuro" />
   </div>
-</nav>
-<script src="../js/auth.js"></script>
-<script>
-  if (!getToken()) {
-    alert("Você precisa estar logado para acessar essa página");
-    window.location.href = "../public/html/logins.html";
-  }
-</script>
+
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Dropdown
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+          </li>
+        </ul>
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
   <h1>Demandas Cadastradas</h1>
 
   <form id="form-demanda">
-  <input id="cargo" placeholder="Cargo" required>
-  <input id="valor" type="number" min="0" required>
-  <textarea id="descricao" placeholder="Descrição detalhada" required></textarea>
-  <button type="submit">Enviar</button>
-</form>
-
-<script>
-document.getElementById("form-demanda").addEventListener("submit", async e => {
-  e.preventDefault();
-
-  const cargo = document.getElementById("cargo").value.trim();
-  const valor = Number(document.getElementById("valor").value);
-  const descricao = document.getElementById("descricao").value.trim();
-
-  // ✅ Validação no front-end
-  if (!cargo || cargo.length < 3) return alert("Cargo inválido.");
-  if (isNaN(valor) || valor < 0) return alert("Valor deve ser positivo.");
-  if (!descricao || descricao.length < 10) return alert("Descrição muito curta.");
-
-  // Se passou, envia pro servidor
-  const res = await fetch("/api/demandas", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + localStorage.getItem("token")
-    },
-    body: JSON.stringify({ cargo, valor, descricao, usuario_id: 1, formacao_id: 1 })
-  });
-
-  const data = await res.json();
-  if (!res.ok) {
-    alert("Erro: " + (data.error || data.detalhes?.join(", ")));
-  } else {
-    alert("Demanda criada com sucesso!");
-  }
-});
-</script>
-
+    <input id="cargo" placeholder="Cargo" required>
+    <input id="valor" type="number" min="0" required>
+    <textarea id="descricao" placeholder="Descrição detalhada" required></textarea>
+    <button type="submit">Enviar</button>
+  </form>
 
   <div id="lista-demandas"></div>
 
@@ -215,55 +193,5 @@ document.getElementById("form-demanda").addEventListener("submit", async e => {
 
     carregarDemandas();
   </script>
-
-<!--"script para levar ate esta pagina quando sair da criação de conta"-->
-
-  <script>
-document.getElementById("empresaForm").addEventListener("submit", async function(e) {
-  e.preventDefault();
-
-  const empresa = {
-    nome: document.getElementById("nome").value,
-    cnpj: document.getElementById("cnpj").value,
-    telefone: document.getElementById("telefone").value,
-    email: document.getElementById("email").value,
-    redeSocial: document.getElementById("redeSocial").value,
-    senha: document.getElementById("senha").value
-  };
-
-  const res = await fetch("/empresas", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(empresa)
-  });
-
-  if (res.ok) {
-    alert("✅ Empresa cadastrada com sucesso!");
-    // Redireciona para a página desejada
-    window.location.href = "/html/index.html"; // aqui vai para o index.html
-  } else {
-    alert("❌ Erro ao cadastrar empresa.");
-  }
-  
-});
-
-
-</script>
-<script>
-const usuario = {
-  nome: document.getElementById("primeiroNome").value + " " + document.getElementById("segundoNome").value,
-  email: document.getElementById("email").value,
-  senha: document.getElementById("senha").value
-};
-const res = await fetch("/usuarios", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(usuario)
-  });
-</script>
-
-
-
-
 </body>
 </html>
