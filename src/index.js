@@ -1,47 +1,22 @@
-import "dotenv/config";
 import express from "express";
-import cors from "cors";
-import morgan from "morgan";
-import path from "path";
-import { fileURLToPath } from "url";
-import router from "./routes.js";
+import dotenv from "dotenv";
+import authRoutes from "./routes/auth.routes.js";
+import uploadRoutes from "./routes/upload.routes.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+dotenv.config();
 
-const server = express();
+const app = express();
 
-// ======================
-// Middlewares globais
-// ======================
-server.use(morgan("tiny"));
-server.use(cors());
-server.use(express.json());
+app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 
-// ======================
-// Arquivos estáticos
-// ======================
-server.use(express.static(path.join(__dirname, "../public")));
-server.use("/html", express.static(path.join(__dirname, "../public/html")));
+app.use(authRoutes);
+app.use(uploadRoutes);
 
-// ======================
-// Rotas da API
-// ======================
-server.use("/api", router);
-
-// ======================
-// Página inicial
-// ======================
-server.get("/", (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../public/html/pagina_de_criar_conta.html")
-  );
+app.get("/", (req, res) => {
+  res.send("API Nova Chance funcionando");
 });
 
-// ======================
-// Inicialização
-// ======================
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+app.listen(3333, () => {
+  console.log("Servidor rodando na porta 3333");
 });
