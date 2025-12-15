@@ -22,11 +22,12 @@
       text-align: center;
     }
 
-    .form input {
+    .form input, .form textarea {
       padding: 10px;
       margin: 5px;
       border-radius: 5px;
       border: none;
+      width: 100%;
     }
 
     .form button {
@@ -54,7 +55,6 @@
       margin: 5px 0;
     }
 
-    /* Add style for the image */
     .image-container {
       text-align: center;
       margin-bottom: 30px;
@@ -87,20 +87,6 @@
           <li class="nav-item">
             <a class="nav-link" href="#">Link</a>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Dropdown
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-          </li>
         </ul>
         <form class="d-flex" role="search">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
@@ -112,10 +98,14 @@
 
   <h1>Demandas Cadastradas</h1>
 
-  <form id="form-demanda">
+  <form id="form-demanda" class="form">
     <input id="cargo" placeholder="Cargo" required>
     <input id="valor" type="number" min="0" required>
     <textarea id="descricao" placeholder="Descrição detalhada" required></textarea>
+
+    <!-- Campo de upload de arquivo -->
+    <input id="arquivo" type="file" required>
+
     <button type="submit">Enviar</button>
   </form>
 
@@ -150,39 +140,35 @@
       }
     }
 
-    async function adicionarDemanda() {
+    async function adicionarDemanda(event) {
+      event.preventDefault(); // Impede o envio do formulário padrão
+
       const cargo = document.getElementById('cargo').value;
       const valor = document.getElementById('valor').value;
       const descricao = document.getElementById('descricao').value;
-      const formacao_id = parseInt(document.getElementById('formacao_id').value);
-      const usuario_id = parseInt(document.getElementById('usuario_id').value);
+      const arquivo = document.getElementById('arquivo').files[0]; // Pega o arquivo
 
-      if (!cargo || !valor || !formacao_id || !usuario_id) {
+      if (!cargo || !valor || !descricao || !arquivo) {
         alert("Preencha todos os campos obrigatórios.");
         return;
       }
 
-      const nova = {
-        cargo,
-        valor,
-        descricao,
-        formacao_id,
-        usuario_id,
-        data_criacao: new Date().toISOString().split('T')[0],
-        status: 'pendente',
-        data_conclusao: null
-      };
+      const formData = new FormData();
+      formData.append('cargo', cargo);
+      formData.append('valor', valor);
+      formData.append('descricao', descricao);
+      formData.append('arquivo', arquivo); // Adiciona o arquivo
 
       try {
         const res = await fetch(API_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(nova)
+          body: formData,
         });
 
         if (res.ok) {
           await carregarDemandas();
           document.querySelectorAll('input').forEach(i => i.value = '');
+          document.getElementById('descricao').value = '';
         } else {
           alert("Erro ao adicionar demanda.");
         }
@@ -190,6 +176,8 @@
         console.error("Erro ao enviar demanda:", err);
       }
     }
+
+    document.getElementById('form-demanda').addEventListener('submit', adicionarDemanda);
 
     carregarDemandas();
   </script>
