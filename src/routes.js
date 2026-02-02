@@ -4,6 +4,9 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { autenticar } from "./middleware/auth.js";
 import { demandaSchema } from "./validators/demandaValidator.js";
+import empresasRoutes from "./routes/empresas.routes.js";
+
+server.use("/api", empresasRoutes);
 
 const router = Router();
 const prisma = new PrismaClient();
