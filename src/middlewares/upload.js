@@ -3,26 +3,25 @@ import path from "path";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "public/uploads");
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, Date.now() + ext);
-  },
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
 });
 
 function fileFilter(req, file, cb) {
-  const tiposPermitidos = ["image/png", "image/jpeg", "application/pdf"];
-
-  if (!tiposPermitidos.includes(file.mimetype)) {
-    return cb(new Error("Tipo de arquivo não permitido"), false);
+  if (file.mimetype.startsWith("image/")) {
+    cb(null, true);
+  } else {
+    cb(new Error("Tipo de arquivo inválido. Envie apenas imagens."), false);
   }
-
-  cb(null, true);
 }
 
 export const upload = multer({
   storage,
-  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
-  fileFilter,
+  limits: {
+    fileSize: 2 * 1024 * 1024 // 2MB
+  },
+  fileFilter
 });

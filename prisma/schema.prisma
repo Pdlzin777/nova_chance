@@ -1,4 +1,3 @@
-// ---------- CONFIGURAÇÃO ----------
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
@@ -8,20 +7,15 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// ---------- MODELOS ----------
-
-// Usuário
 model usuario {
-  id         Int                 @id @default(autoincrement())
-  nome       String
-  email      String              @unique
-  senha      String
-  formacoes  usuariosformacoes[]
-  demandas   demanda[]
-  avaliacoes avaliacao[]         @relation("UsuarioAvaliacoes")
+  id        Int        @id @default(autoincrement())
+  nome      String
+  email     String     @unique
+  senha     String
+  demandas  demanda[]
+  avaliacoes avaliacao[]
 }
 
-// Empresa
 model empresa {
   id         Int      @id @default(autoincrement())
   nome       String
@@ -33,48 +27,19 @@ model empresa {
   createdAt  DateTime @default(now())
 }
 
-// Formação
-model formacao {
-  id       Int                 @id @default(autoincrement())
-  nome     String              @unique
-  usuarios usuariosformacoes[]
-  demandas demanda[]
-}
-
-// Relação usuário-formação
-model usuariosformacoes {
-  id          Int @id @default(autoincrement())
-  usuario_id  Int
-  formacao_id Int
-
-  usuario  usuario  @relation(fields: [usuario_id], references: [id])
-  formacao formacao @relation(fields: [formacao_id], references: [id])
-}
-
-// Demanda
 model demanda {
-  id          Int    @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   cargo       String
-  valor       Int    @default(0)
+  valor       Int      @default(0)
   descricao   String
-  status      String @default("aberta")
-  usuario_id  Int
-  formacao_id Int
-
-  usuario    usuario     @relation(fields: [usuario_id], references: [id])
-  formacao   formacao    @relation(fields: [formacao_id], references: [id])
-  avaliacoes avaliacao[]
+  usuario     usuario? @relation(fields: [usuario_id], references: [id])
+  usuario_id  Int?
 }
 
-// Avaliação
 model avaliacao {
-  id                   Int    @id @default(autoincrement())
-  demanda_id           Int
-  usuario_avaliador_id Int
-  usuario_avaliado_id  Int
-  pontuacao            Int
-  comentario           String
-
-  demanda demanda  @relation(fields: [demanda_id], references: [id], onDelete: Cascade)
-  usuario usuario? @relation("UsuarioAvaliacoes", fields: [usuario_avaliado_id], references: [id])
+  id        Int      @id @default(autoincrement())
+  nota      Int
+  comentario String
+  usuario   usuario @relation(fields: [usuarioId], references: [id])
+  usuarioId Int
 }
